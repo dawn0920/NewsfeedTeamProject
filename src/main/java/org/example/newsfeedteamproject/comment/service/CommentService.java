@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
 import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.comment.entity.Comment;
-import org.example.newsfeedteamproject.entity.Post;
-import org.example.newsfeedteamproject.entity.User;
 import org.example.newsfeedteamproject.comment.repository.CommentRepository;
-import org.example.newsfeedteamproject.repository.PostRepository;
-import org.example.newsfeedteamproject.repository.UserRepository;
+import org.example.newsfeedteamproject.post.entity.Post;
+import org.example.newsfeedteamproject.post.repository.PostRepository;
+import org.example.newsfeedteamproject.user.entity.User;
+import org.example.newsfeedteamproject.user.repository.UserRepository;
+import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

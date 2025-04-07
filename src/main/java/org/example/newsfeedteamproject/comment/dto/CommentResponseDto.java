@@ -21,6 +21,6 @@ public class CommentResponseDto {
         this.postId = comment.getPost().getId();
         this.contents = comment.getContents();
         this.creatTime = comment.getCreatTime();
-        this.modifiedAt = comment.getModifiedAt();
+        this.modifiedAt = comment.getModifiedTime();
     }
 }

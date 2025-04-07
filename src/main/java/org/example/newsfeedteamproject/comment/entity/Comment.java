@@ -1,9 +1,12 @@
 package org.example.newsfeedteamproject.comment.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.post.entity.Post;
+import org.example.newsfeedteamproject.user.entity.User;
 
 @Getter
 @Entity
@@ -16,7 +19,7 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlack(message = "내용은 필수 입력값입니다.")
+    @NotBlank(message = "내용은 필수 입력값입니다.")
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
