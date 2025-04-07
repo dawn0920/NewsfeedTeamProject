@@ -1,10 +1,12 @@
 package org.example.newsfeedteamproject.post.service;
 
+import org.example.newsfeedteamproject.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.post.repository.PostRepository;
+import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public PostResponseDto savePost(PostRequestDto requestDto, Long userId) {
-        User user = postRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
         Post post = new Post(user,requestDto);

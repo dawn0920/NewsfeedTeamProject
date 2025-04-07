@@ -2,9 +2,10 @@ package org.example.newsfeedteamproject.post.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.newsfeedteamproject.entity.BaseEntity;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
-
+import org.example.newsfeedteamproject.user.entity.User;
 /**
  * 포스트 정보를 나타내는 엔티티 클래스 입니다.
  * BaseEntity의 생성 시간 및 수정 시간을 상속 받습니다.
@@ -12,6 +13,7 @@ import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 @Getter
 @Entity
 @Table(name = "post")
+@NoArgsConstructor
 public class Post extends BaseEntity {
 
     /**
@@ -57,10 +59,11 @@ public class Post extends BaseEntity {
     private User user;
 
     public Post(User user, PostRequestDto dto){
-        this.User = user;
+        this.user = user;
         this.contents = dto.getContents();
         this.img=dto.getImg();
         this.tag=dto.getMention();
+        this.mention= dto.getMention();
         this.like = false;
 
     }

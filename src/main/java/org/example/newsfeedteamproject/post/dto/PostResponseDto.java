@@ -65,9 +65,9 @@ public class PostResponseDto {
         this.tag = post.getTag();
         this.mention=post.getMention();
         this.like=post.isLike();
-        this.userId=post.getUser().getId;
+        this.userId=post.getUser().getId();
         this.createdAt=post.getCreatTime();
-        this.updatedAt=post.getModifiedAt();
+        this.updatedAt=post.getModifiedTime();
     }
 
 }
