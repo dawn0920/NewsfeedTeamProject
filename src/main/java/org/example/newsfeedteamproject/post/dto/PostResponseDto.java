@@ -1,6 +1,7 @@
 package org.example.newsfeedteamproject.post.dto;
 
 import lombok.Getter;
+import org.example.newsfeedteamproject.post.entity.Post;
 
 
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public class PostResponseDto {
     /**
      * 프로필 id 외래키
      */
-    private final Long profileId;
+    private final Long userId;
 
     /**
      * 생성 시각
@@ -57,16 +58,16 @@ public class PostResponseDto {
      */
     private final LocalDateTime updatedAt;
 
-    public PostResponseDto(Long id,String contents,String img, String tag, String mention,Boolean like, LocalDateTime createdAt,LocalDateTime updatedAt,Long profileId ){
-        this.id = id;
-        this.contents=contents;
-        this.img = img;
-        this.tag = tag;
-        this.mention=mention;
-        this.like=like;
-        this.profileId=profileId;
-        this.createdAt=createdAt;
-        this.updatedAt=updatedAt;
+    public PostResponseDto(Post post){
+        this.id = post.getId();
+        this.contents=post.getContents();
+        this.img = post.getImg();
+        this.tag = post.getTag();
+        this.mention=post.getMention();
+        this.like=post.isLike();
+        this.userId=post.getUser().getId;
+        this.createdAt=post.getCreatTime();
+        this.updatedAt=post.getModifiedAt();
     }
 
 }

@@ -1,7 +1,9 @@
-package org.example.newsfeedteamproject.entity;
+package org.example.newsfeedteamproject.post.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 
 /**
  * 포스트 정보를 나타내는 엔티티 클래스 입니다.
@@ -10,7 +12,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "post")
-public class Post extends BaseEntity{
+public class Post extends BaseEntity {
 
     /**
      * 게시글 식별자
@@ -52,6 +54,22 @@ public class Post extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id",referencedColumnName = "id", nullable = false)
-    private Profile profile;
+    private User user;
+
+    public Post(User user, PostRequestDto dto){
+        this.User = user;
+        this.contents = dto.getContents();
+        this.img=dto.getImg();
+        this.tag=dto.getMention();
+        this.like = false;
+
+    }
+
+    public void update(PostRequestDto dto){
+        this.contents = dto.getContents();
+        this.img = dto.getImg();
+        this.tag = dto.getTag();
+        this.mention = dto.getMention();
+    }
 
 }
