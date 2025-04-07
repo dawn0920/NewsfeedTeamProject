@@ -61,7 +61,7 @@ public class CommentService {
             throw new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.");
         }
 
-        comment.update(requestDto.getName(), requestDto.getContents());
+        comment.update(requestDto.getContents());
         return new CommentResponseDto(comment);
     }
 
