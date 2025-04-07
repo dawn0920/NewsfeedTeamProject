@@ -45,4 +45,19 @@ public class User extends BaseEntity{
 
     @Column(nullable = false)
     private boolean isWithdrawn;
+
+    public User() {
+
+    }
+
+    public User(String email, String password, String userId, String name, String intro, String profileImg, String birthday, String phone) {
+        this.email = email;
+        this.password = password;
+        this.userId = userId;
+        this.name = name;
+        this.intro = intro;
+        this.profileImg = profileImg;
+        this.birthday = birthday;
+        this.phone = phone;
+    }
 }

@@ -6,12 +6,13 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-@EntityListeners(AbstractMethodError.class)
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
     @CreatedDate // 생성시 자동입력
@@ -19,5 +20,5 @@ public class BaseEntity {
     private LocalDateTime creatTime;
 
     @LastModifiedDate
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedTime;
 }
