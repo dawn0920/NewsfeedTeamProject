@@ -64,7 +64,7 @@ private final PostService postService;
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
     }
     Long userId = (Long)session.getAttribute("userId");
-    postService.deletePost(id, );
+    postService.deletePost(id, userId);
     return ResponseEntity.noContent().build();
     }
 }
