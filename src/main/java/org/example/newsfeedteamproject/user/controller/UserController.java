@@ -41,6 +41,8 @@ public class UserController {
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
+
+
     @PostMapping("/follow") // 팔로우
     public  ResponseEntity<FollowResponseDto> followUser(
             @RequestBody FollowRequestDto requestDto,
