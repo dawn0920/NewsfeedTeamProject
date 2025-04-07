@@ -8,11 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 public class UserRequestDto {
 
-    private final Long id;
+    private final String email;
 
     private final String password;
-
-    private final String email;
 
     private final String userId;
 
@@ -26,10 +24,9 @@ public class UserRequestDto {
 
     private final String phone;
 
-    public UserRequestDto(Long id, String password, String email, String userId, String name, String intro, String profileImg, String birthday, String phone) {
-        this.id = id;
-        this.password = password;
+    public UserRequestDto(String email, String password, String userId, String name, String intro, String profileImg, String birthday, String phone) {
         this.email = email;
+        this.password = password;
         this.userId = userId;
         this.name = name;
         this.intro = intro;

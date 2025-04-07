@@ -30,9 +30,9 @@ public class UserResponseDto {
 
     private final LocalDateTime createdTime;
 
-    private final LocalDateTime updatedTime;
+    private final LocalDateTime modifiedTime;
 
-    public UserResponseDto(Long id, String email, String userId, String name, String intro, String profileImg, String birthday, int follow, int following, String phone, LocalDateTime createdTime, LocalDateTime updatedTime) {
+    public UserResponseDto(Long id, String email, String userId, String name, String intro, String profileImg, String birthday, int follow, int following, String phone, LocalDateTime createdTime, LocalDateTime modifiedTime) {
         this.id = id;
         this.email = email;
         this.userId = userId;
@@ -44,6 +44,6 @@ public class UserResponseDto {
         this.following = following;
         this.phone = phone;
         this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
+        this.modifiedTime = modifiedTime;
     }
 }
