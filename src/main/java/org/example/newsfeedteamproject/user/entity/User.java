@@ -7,7 +7,7 @@ import org.example.newsfeedteamproject.entity.BaseEntity;
 @Getter
 @Entity
 @Table(name = "user")
-public class UserEntity extends BaseEntity{
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
