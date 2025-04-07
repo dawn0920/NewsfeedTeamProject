@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name = "follow")
-public class Follwo {
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class Follwo {
     @JoinColumn(name = "from_user")
     private User fromUserId;
 
-    public Follwo(User toUser, User fromUSer) {
+    public Follow(User toUser, User fromUSer) {
         this.toUserId = toUserId;
         this.fromUserId = fromUserId;
     }

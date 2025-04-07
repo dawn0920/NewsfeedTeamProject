@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FollwoResponseDto {
-    private boolean success;
-    private int follwoCount;
+public class FollowRequestDto {
+    private long toUserId;
 }
