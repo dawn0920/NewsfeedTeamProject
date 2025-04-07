@@ -23,10 +23,9 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public PostResponseDto savePost(PostRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-        Post post = new Post(user,requestDto);
+        Post post = new Post(user, requestDto);
         Post savedPost = postRepository.save(post);
 
         return new PostResponseDto(savedPost);
@@ -34,23 +33,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getAllPosts() {
-        return postRepository.findAll().stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        return postRepository.findAll().stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
     public PostResponseDto getPostById(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         return new PostResponseDto(post);
     }
 
     @Transactional
     @Override
-    public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto, Long userId) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new RuntimeException("수정 권한이 없습니다.");
+        }
 
         post.update(requestDto);
         return new PostResponseDto(post);
@@ -58,11 +57,15 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public void deletePost(Long id) {
-        if(!postRepository.existsById(id)){
-            throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
+    public void deletePost(Long id, Long userId) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        if (!post.getUser().getId().equals(userId)) {
+            throw new SecurityException("삭제 권한이 없습니다.");
         }
-        postRepository.deleteById(id);
+
+
+        postRepository.delete(post);
 
     }
 }
+
