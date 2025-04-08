@@ -17,7 +17,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<CommentResponseDto> addComment(
             @SessionAttribute(name = "userId") Long userId,
             @RequestParam Long postId,
