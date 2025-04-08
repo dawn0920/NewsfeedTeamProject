@@ -6,7 +6,7 @@ import org.example.newsfeedteamproject.entity.BaseEntity;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 public class User extends BaseEntity{
 
     @Id
@@ -20,7 +20,7 @@ public class User extends BaseEntity{
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private String userRefId;
 
     @Column(nullable = false)
     private String name;
@@ -44,16 +44,16 @@ public class User extends BaseEntity{
     private String phone;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0" )
-    private boolean isWithdrawn;
+    private boolean withdrawn;
 
     public User() {
 
     }
 
-    public User(String email, String password, String userId, String name, String intro, String profileImg, String birthday, String phone) {
+    public User(String email, String password, String userRefId, String name, String intro, String profileImg, String birthday, String phone) {
         this.email = email;
         this.password = password;
-        this.userId = userId;
+        this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
         this.profileImg = profileImg;
@@ -61,9 +61,9 @@ public class User extends BaseEntity{
         this.phone = phone;
     }
 
-    public void update(String email, String userId, String name, String intro, String profileImg, String birthday, String phone){
+    public void update(String email, String userRefId, String name, String intro, String profileImg, String birthday, String phone){
         this.email = email;
-        this.userId = userId;
+        this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
         this.profileImg = profileImg;
@@ -71,7 +71,7 @@ public class User extends BaseEntity{
         this.phone = phone;
     }
 
-    public void withdrawn(boolean isWithdrawn){
-        this.isWithdrawn = isWithdrawn;
+    public void withdrawn(boolean withdrawn){
+        this.withdrawn = withdrawn;
     }
 }

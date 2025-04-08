@@ -55,7 +55,7 @@ public class Post extends BaseEntity {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id",referencedColumnName = "id", nullable = false)
     private User user;
 
     public Post(User user, PostRequestDto dto){

@@ -99,7 +99,7 @@ public class UserController {
      * @param requestDto 수정 데이터
      * @return
      */
-    @PutMapping("/{id}")
+    @PatchMapping("update/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
 
         userService.update(id, requestDto);
@@ -115,12 +115,12 @@ public class UserController {
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> withdrawn(
+    public ResponseEntity<IsWithdrawnResponseDto> withdrawn(
             @PathVariable Long id,
             @RequestBody IsWithdrawnRequestDto requestDto){
 
-        userService.withdrawn(id, requestDto);
+        IsWithdrawnResponseDto isWithdrawnResponseDto = userService.withdrawn(id, requestDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(isWithdrawnResponseDto, HttpStatus.OK);
     }
 }

@@ -5,9 +5,12 @@ import lombok.Getter;
 @Getter
 public class IsWithdrawnRequestDto {
 
-    private final boolean isWithdrawn;
+    private final String password;
 
-    public IsWithdrawnRequestDto(boolean isWithdrawn) {
-        this.isWithdrawn = isWithdrawn;
+    private final boolean withdrawn;
+
+    public IsWithdrawnRequestDto(String password, boolean withdrawn) {
+        this.password = password;
+        this.withdrawn = withdrawn;
     }
 }

@@ -10,9 +10,9 @@ import java.io.IOException;
 
 @Slf4j
 
-public class LoginFillter implements Filter {
+public class LoginFilter implements Filter {
 
-    private static final String[] WHITE_LIST = {"/", "/user", "/post", "/comment"};
+    private static final String[] WHITE_LIST = {"/", "/users/signup", "/users/login", "/post", "/comment"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,7 +26,7 @@ public class LoginFillter implements Filter {
             if (!isWhiteList(requestURI)) {
                 HttpSession session = httpRequest.getSession(false);
 
-                if (session == null || session.getAttribute("sessionKey값") == null) {
+                if (session == null || session.getAttribute("user") == null) {
                     throw new RuntimeException("로그인 해주세요.");
                 }
             }
