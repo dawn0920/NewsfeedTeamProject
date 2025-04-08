@@ -41,7 +41,7 @@ public class PostResponseDto {
     /**
      * 좋아요 상태
      */
-    private final boolean like;
+    private final int like;
 
     /**
      * 프로필 id 외래키
@@ -64,7 +64,7 @@ public class PostResponseDto {
         this.img = post.getImg();
         this.tag = post.getTag();
         this.mention=post.getMention();
-        this.like=post.isLike();
+        this.like=post.getLike();
         this.userId=post.getUser().getId();
         this.createdAt=post.getCreatTime();
         this.updatedAt=post.getModifiedTime();
