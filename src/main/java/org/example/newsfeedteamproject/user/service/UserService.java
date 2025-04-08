@@ -2,10 +2,7 @@ package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.global.PasswordEncoderConfig;
-import org.example.newsfeedteamproject.user.dto.IsWithdrawnRequestDto;
-import org.example.newsfeedteamproject.user.dto.IsWithdrawnResponseDto;
-import org.example.newsfeedteamproject.user.dto.UserRequestDto;
-import org.example.newsfeedteamproject.user.dto.UserResponseDto;
+import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -155,5 +152,17 @@ public class UserService {
         user.withdrawn(requestDto.isWithdrawn());
 
         return new IsWithdrawnResponseDto(user.getId(), user.isWithdrawn());
+    }
+
+    public Long login(LoginRequestDto requestDto) {
+
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "해당 이메일은 존재하지 않습니다."));
+
+        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+        }
+
+        return user.getId();
     }
 }
