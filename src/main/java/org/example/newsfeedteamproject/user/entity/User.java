@@ -47,7 +47,6 @@ public class User extends BaseEntity{
     private boolean isWithdrawn;
 
     public User() {
-
     }
 
     public User(String email, String password, String userId, String name, String intro, String profileImg, String birthday, String phone) {

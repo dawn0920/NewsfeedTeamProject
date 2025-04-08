@@ -6,7 +6,7 @@ import org.example.newsfeedteamproject.user.entity.User;
 
 public class CommentFactory {
 
-    public static Comment saveComment(CommentRequestDto requestDto, Post post, User user) {
-        return new Comment(requestDto.getContents(), post, user);
+    public static Comment saveComment(Post post, User user, CommentRequestDto requestDto) {
+        return new Comment(post, user, requestDto.getContents());
     }
 }

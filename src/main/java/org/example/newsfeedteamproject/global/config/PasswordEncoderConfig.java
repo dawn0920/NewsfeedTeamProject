@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.global;
+package org.example.newsfeedteamproject.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

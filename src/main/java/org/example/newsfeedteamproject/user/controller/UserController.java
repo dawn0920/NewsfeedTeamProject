@@ -34,6 +34,7 @@ public class UserController {
      * @param requestDto 요청 회원 정보
      * @return
      */
+
     @PostMapping("/signUp")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody UserRequestDto requestDto){
 
@@ -41,7 +42,6 @@ public class UserController {
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
-
 
     @PostMapping("/follow") // 팔로우
     public  ResponseEntity<FollowResponseDto> followUser(

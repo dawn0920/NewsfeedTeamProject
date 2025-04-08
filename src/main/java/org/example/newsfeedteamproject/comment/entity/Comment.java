@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.newsfeedteamproject.base_entity.BaseEntity;
+import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.user.entity.User;
 
@@ -27,13 +28,13 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Comment(String contents, Post post, User user) {
+    public Comment(Post post, User user, String contents) {
         this.post = post;
         this.user = user;
         this.contents = contents;
     }
 
-    public void update(String contents) {
-        this.contents = contents;
+    public void update(CommentRequestDto dto) {
+        this.contents = dto.getContents();
     }
 }

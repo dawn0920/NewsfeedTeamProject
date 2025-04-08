@@ -9,9 +9,12 @@ import org.example.newsfeedteamproject.user.entity.User;
 @Getter
 @Entity
 @NoArgsConstructor
+
 // 유저 id당 게시물에 하나의 좋아요밖에 누르지 못하게 설정
+
 @Table(name = "post_likes",
     uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "post_id"}))
+
 public class PostLikes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,7 @@ public class PostLikes {
     // 좋아요를 받은 게시글
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private Post post   ;
+    private Post post;
 
     public PostLikes(User user, Post post) {
         this.user = user;

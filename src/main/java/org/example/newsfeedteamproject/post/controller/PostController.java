@@ -15,18 +15,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
+
 public class PostController {
 
 private final PostService postService;
+
 @PostMapping
+
     public ResponseEntity<?> savePost(
         @RequestBody PostRequestDto requestDto,
         HttpServletRequest request) {
+
     HttpSession session = request.getSession(false);
+
     if(session == null || session.getAttribute("userId")==null){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다");
     }
+
     Long userId = (Long) session.getAttribute("userId");
+
     PostResponseDto savedPost =postService.savePost(requestDto,userId);
     return ResponseEntity.ok(savedPost);
 }
@@ -39,8 +46,11 @@ private final PostService postService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long id){
+
     PostResponseDto post =postService.getPostById(id);
+
     return ResponseEntity.ok(post);
+
     }
 
     @PutMapping("/{id}")

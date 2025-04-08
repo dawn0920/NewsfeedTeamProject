@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.global;
+package org.example.newsfeedteamproject.global.config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
