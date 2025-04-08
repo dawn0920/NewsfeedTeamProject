@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -27,4 +29,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
 
     Page<Comment> findByUserId(Long userId, Pageable pageable);
+
+    /**
+     * 포스트 아이디로 코멘트 조회
+     * @param postId
+     * @param pageable
+     * @return
+     */
+
+    List<Comment> findByPostId(Long postId);
+
 }

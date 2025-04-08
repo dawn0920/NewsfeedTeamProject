@@ -8,7 +8,6 @@ import org.example.newsfeedteamproject.post.service.PostService;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

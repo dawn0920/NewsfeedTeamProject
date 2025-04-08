@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -87,7 +90,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.");
@@ -107,12 +110,18 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 댓글만 삭제할 수 있습니다.");
         }
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> findByComment(Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return  comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 }

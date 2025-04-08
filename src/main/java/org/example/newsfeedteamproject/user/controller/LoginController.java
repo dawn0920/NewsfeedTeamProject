@@ -24,7 +24,6 @@ public class LoginController {
     public ResponseEntity<Void> login(@RequestBody LoginRequestDto requestDto, HttpServletRequest request){
 
         Long userId = userService.login(requestDto);
-
         HttpSession session = request.getSession();
         session.setAttribute("LOGIN_USER", userId);
 

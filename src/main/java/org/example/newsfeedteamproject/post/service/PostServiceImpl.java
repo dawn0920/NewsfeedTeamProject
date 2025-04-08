@@ -21,6 +21,14 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+
+    /**
+     * 포스트 작성 메소드
+     * @param requestDto
+     * @param userId
+     * @return
+     */
+
     @Transactional
     @Override
     public PostResponseDto savePost(PostRequestDto requestDto, Long userId) {

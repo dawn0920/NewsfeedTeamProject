@@ -1,6 +1,5 @@
 package org.example.newsfeedteamproject.comment.controller;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
@@ -31,12 +30,24 @@ public class CommentController {
      * @return
      */
 
-    @PostMapping("/posts/{postId}")
+    @PostMapping("/posts/{postId}/comment")
     public ResponseEntity<CommentResponseDto> postComment
     (@SessionAttribute(name = "LOGIN_USER") Long userId,
      @PathVariable Long postId,
      @Valid @RequestBody CommentRequestDto requestDto) {
         return new ResponseEntity<>(commentService.addComment(userId, postId, requestDto),HttpStatus.CREATED);
+    }
+
+    /**
+     * 특정 포스트에 달린 댓글을 보여줍니다.
+     * @param postId
+     * @param pageable
+     * @return
+     */
+
+    @GetMapping("/posts/{postId}/comment")
+    public ResponseEntity<List<CommentResponseDto>> findByComment(@PathVariable Long postId) {
+        return ResponseEntity.ok(commentService.findByComment(postId));
     }
 
     /**

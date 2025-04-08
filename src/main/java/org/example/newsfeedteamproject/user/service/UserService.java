@@ -1,7 +1,6 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeedteamproject.global.PasswordEncoderConfig;
 import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
