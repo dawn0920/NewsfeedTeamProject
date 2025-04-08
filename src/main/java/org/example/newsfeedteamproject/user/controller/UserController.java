@@ -37,6 +37,7 @@ public class UserController {
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
+
     @PostMapping("/follow") // 팔로우
     public  ResponseEntity<FollowResponseDto> followUser(
             @RequestBody FollowRequestDto requestDto,
@@ -99,7 +100,7 @@ public class UserController {
      * @param requestDto 수정 데이터
      * @return
      */
-    @PatchMapping("update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
 
         userService.update(id, requestDto);
