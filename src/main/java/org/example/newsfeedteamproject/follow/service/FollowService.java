@@ -1,10 +1,10 @@
-package org.example.newsfeedteamproject.user.service;
+package org.example.newsfeedteamproject.follow.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
-import org.example.newsfeedteamproject.user.entity.Follow;
+import org.example.newsfeedteamproject.follow.dto.FollowResponseDto;
+import org.example.newsfeedteamproject.follow.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
-import org.example.newsfeedteamproject.user.repository.FollowRepository;
+import org.example.newsfeedteamproject.follow.repository.FollowRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
-package org.example.newsfeedteamproject.user.repository;
+package org.example.newsfeedteamproject.follow.repository;
 
-import org.example.newsfeedteamproject.user.entity.Follow;
+import org.example.newsfeedteamproject.follow.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.PostLikes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FollowRequestDto {
-    private long toUserId;
+public class PostLikeRequestDto {
+    private long toUserID;
 }

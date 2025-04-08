@@ -1,7 +1,11 @@
 package org.example.newsfeedteamproject.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.user.dto.UserRequestDto;
+import org.example.newsfeedteamproject.user.dto.UserResponseDto;
 import org.example.newsfeedteamproject.user.dto.*;
+import org.example.newsfeedteamproject.user.entity.User;
+import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.FollowService;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +20,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final FollowService followService;
 
     /**
      * 회원가입 API
