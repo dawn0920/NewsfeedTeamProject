@@ -63,9 +63,7 @@ public class PostServiceImpl implements PostService {
             throw new SecurityException("삭제 권한이 없습니다.");
         }
 
-
         postRepository.delete(post);
-
     }
 }
 

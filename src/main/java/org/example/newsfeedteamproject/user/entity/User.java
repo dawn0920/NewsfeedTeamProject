@@ -2,7 +2,7 @@ package org.example.newsfeedteamproject.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.base_entity.BaseEntity;
 
 @Getter
 @Entity

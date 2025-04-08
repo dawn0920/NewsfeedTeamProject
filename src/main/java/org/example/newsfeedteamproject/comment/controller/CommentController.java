@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.comment.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
@@ -17,14 +18,27 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("")
+    /**
+     * id를 받아서 포스트를 찾아주고, 세션을 받아서 로그인 유무를 확인해준다음 댓글을 등록합니다.
+     * @param postId
+     * @param requestDto
+     * @param session
+     * @return
+     */
+
+    @PostMapping("/posts/{id}")
     public ResponseEntity<CommentResponseDto> addComment(
-            @SessionAttribute(name = "userId") Long userId,
-            @RequestParam Long postId,
-            @Valid @RequestBody CommentRequestDto requestDto
-    ) {
-        return ResponseEntity.ok(commentService.addComment(userId, postId, requestDto));
-    }
+            @PathVariable Long postId,
+            @Valid @RequestBody CommentRequestDto requestDto,
+            HttpSession session) 
+    { return ResponseEntity.ok(commentService.addComment(postId, requestDto, session));}
+
+    /**
+     *
+     * @param postId
+     * @return
+     */
+
 
     @GetMapping("/lists")
     public ResponseEntity<List<CommentResponseDto>> getCommentsByPost(

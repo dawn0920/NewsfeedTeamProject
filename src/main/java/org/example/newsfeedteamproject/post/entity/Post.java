@@ -3,7 +3,7 @@ package org.example.newsfeedteamproject.post.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.base_entity.BaseEntity;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.user.entity.User;
 /**

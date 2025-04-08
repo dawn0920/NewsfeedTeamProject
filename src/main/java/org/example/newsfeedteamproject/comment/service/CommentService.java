@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.comment.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
 import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
@@ -8,7 +9,6 @@ import org.example.newsfeedteamproject.comment.repository.CommentRepository;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.post.repository.PostRepository;
 import org.example.newsfeedteamproject.user.entity.User;
-import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +22,26 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+
+    /**
+     * 댓글 등록 메소드
+     * @param requestDto
+     * @param session
+     * @return
+     */
 
     @Transactional
-    public CommentResponseDto addComment(Long userId, Long postId, CommentRequestDto requestDto) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    public CommentResponseDto addComment(Long postId, CommentRequestDto requestDto, HttpSession session) {
 
-        Comment comment = new Comment(post, user, requestDto.getContents());
-        commentRepository.save(comment);
+        User loginUser = (User) session.getAttribute("User");
 
-        return new CommentResponseDto(comment);
+        if (loginUser == null) {
+            throw new IllegalCallerException();
+        }
+
+        Post foundPost = postRepository.findById(postId).orElseThrow(IllegalArgumentException::new);
+        Comment comment = new Comment(requestDto.getContents(), foundPost, loginUser);
+        return new CommentResponseDto(commentRepository.save(comment));
     }
 
     @Transactional(readOnly = true)

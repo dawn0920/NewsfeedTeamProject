@@ -1,7 +1,6 @@
 package org.example.newsfeedteamproject.user.dto;
 
 import lombok.Getter;
-import org.example.newsfeedteamproject.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
