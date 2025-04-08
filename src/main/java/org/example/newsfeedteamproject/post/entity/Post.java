@@ -6,19 +6,14 @@ import lombok.NoArgsConstructor;
 import org.example.newsfeedteamproject.entity.BaseEntity;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.user.entity.User;
-import org.example.newsfeedteamproject.comment.entity.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 포스트 정보를 나타내는 엔티티 클래스 입니다.
  * BaseEntity의 생성 시간 및 수정 시간을 상속 받습니다.
  */
 @Getter
 @Entity
-@Table(name = "post")
 @NoArgsConstructor
+@Table(name = "post")
 public class Post extends BaseEntity {
 
     /**
@@ -53,18 +48,15 @@ public class Post extends BaseEntity {
     /**
      * 좋아요 상태
      */
-  //  private int like;
+//    private boolean like;
 
     /**
      * 프로필 id 외래키
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
-
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments = new ArrayList<>();
 
     public Post(User user, PostRequestDto dto){
         this.user = user;
@@ -72,7 +64,7 @@ public class Post extends BaseEntity {
         this.img=dto.getImg();
         this.tag=dto.getMention();
         this.mention= dto.getMention();
-        this.like = getLike();
+//        this.like = false;
     }
 
     public void update(PostRequestDto dto){
@@ -81,6 +73,5 @@ public class Post extends BaseEntity {
         this.tag = dto.getTag();
         this.mention = dto.getMention();
     }
-
 
 }
