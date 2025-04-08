@@ -9,7 +9,7 @@ public class UserRequestDto {
 
     private final String password;
 
-    private final String userId;
+    private final String userRefId;
 
     private final String name;
 
@@ -21,10 +21,10 @@ public class UserRequestDto {
 
     private final String phone;
 
-    public UserRequestDto(String email, String password, String userId, String name, String intro, String profileImg, String birthday, String phone) {
+    public UserRequestDto(String email, String password, String userRefId, String name, String intro, String profileImg, String birthday, String phone) {
         this.email = email;
         this.password = password;
-        this.userId = userId;
+        this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
         this.profileImg = profileImg;
