@@ -25,7 +25,7 @@ public class PostLikes {
     // 좋아요를 받은 게시글
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private Post toPost   ;
+    private Post toPost;
 
     public PostLikes(User fromUser, Post toPost) {
         this.fromUser = fromUser;

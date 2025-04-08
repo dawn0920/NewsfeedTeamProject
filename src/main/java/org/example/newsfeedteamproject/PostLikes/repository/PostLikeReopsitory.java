@@ -10,16 +10,16 @@ import org.springframework.stereotype.Repository;
 public interface PostLikeReopsitory extends JpaRepository<PostLikes, Long> {
 
     // 좋아요 여부
-    boolean existsByToUserAndFromPost(User fromUser, Post toPost);
+    boolean existsByFromUserAndToPost(User fromUser, Post toPost);
 
     // 좋아요를 누른 유저 수
     // int countByToUser(User fromUser); -> 특정 사용자가 좋아요를 누른 횟수
 
     // 게시글에 좋아요를 누른 유저 수
-    int countByFromPost(Post toPost);
+    int countByToPost(Post toPost);
 
     // 좋아요 취소
-    void deleteByToUserAndFromPost(User fromUser, Post toPost);
+    void deleteByFromUserAndToPost(User fromUser, Post toPost);
 
-    Long toUser(User toUser);
+    Long FromUser(User fromUser);
 }

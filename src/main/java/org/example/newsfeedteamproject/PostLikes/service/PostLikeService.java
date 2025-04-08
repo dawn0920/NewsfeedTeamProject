@@ -28,17 +28,17 @@ public class PostLikeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
 
         // 이미 눌려있는지 확인
-        boolean alreadyLiked = postLikeReopsitory.existsByToUserAndFromPost(fromUser, toPost);
+        boolean alreadyLiked = postLikeReopsitory.existsByFromUserAndToPost(fromUser, toPost);
 
         if (alreadyLiked) {
             // 좋아요 취소
-            postLikeReopsitory.deleteByToUserAndFromPost(fromUser, toPost);
+            postLikeReopsitory.deleteByFromUserAndToPost(fromUser, toPost);
         } else {
             // 좋아요
             postLikeReopsitory.save(new PostLikes(fromUser, toPost));
         }
 
-        int likeCount = postLikeReopsitory.countByFromPost(toPost);
+        int likeCount = postLikeReopsitory.countByToPost(toPost);
         return new PostLikeResponseDto(!alreadyLiked, likeCount);
     }
 }
