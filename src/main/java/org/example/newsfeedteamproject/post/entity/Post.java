@@ -50,7 +50,7 @@ public class Post extends BaseEntity {
      */
 //    private boolean like;
 
-    /**
+    /**g
      * 프로필 id 외래키
      */
 
