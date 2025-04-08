@@ -1,11 +1,13 @@
 package org.example.newsfeedteamproject.post.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
 import org.example.newsfeedteamproject.post.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +19,15 @@ public class PostController {
 
 private final PostService postService;
 @PostMapping
-    public ResponseEntity<PostResponseDto> savePost(
+    public ResponseEntity<?> savePost(
         @RequestBody PostRequestDto requestDto,
-        @RequestParam Long userId
-
-        ){
-    PostResponseDto savedPost = postService.savePost(requestDto,userId);
+        HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if(session == null || session.getAttribute("userId")==null){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다");
+    }
+    Long userId = (Long) session.getAttribute("userId");
+    PostResponseDto savedPost =postService.savePost(requestDto,userId);
     return ResponseEntity.ok(savedPost);
 }
 
@@ -39,16 +44,27 @@ private final PostService postService;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDto> updatePost(
+    public ResponseEntity<?> updatePost(
             @PathVariable Long id,
-            @RequestBody PostRequestDto requestDto
-    ){
-    PostResponseDto updatedPost = postService.updatePost(id, requestDto);
+            @RequestBody PostRequestDto requestDto,
+            HttpServletRequest request) {
+   HttpSession session = request.getSession(false);
+   if(session == null || session.getAttribute("userId")==null) {
+       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다");
+   }
+   Long userId = (Long) session.getAttribute("userId");
+   PostResponseDto updatedPost = postService.updatePost(id, requestDto, userId);
     return ResponseEntity.ok(updatedPost);
     }
 @DeleteMapping
-    public ResponseEntity<Void> deletePost(@PathVariable Long id){
-    postService.deletePost(id);
+    public ResponseEntity<?> deletePost(@PathVariable Long id ,
+                                           HttpServletRequest request){
+    HttpSession session = request.getSession(false);
+    if(session == null||session.getAttribute("userId")==null){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+    }
+    Long userId = (Long)session.getAttribute("userId");
+    postService.deletePost(id, userId);
     return ResponseEntity.noContent().build();
     }
 }

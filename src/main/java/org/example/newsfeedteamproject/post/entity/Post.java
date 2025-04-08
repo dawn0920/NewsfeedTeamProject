@@ -65,7 +65,6 @@ public class Post extends BaseEntity {
         this.tag=dto.getMention();
         this.mention= dto.getMention();
         this.like = false;
-
     }
 
     public void update(PostRequestDto dto){
