@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.global;
+package org.example.newsfeedteamproject.global.config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class LoginFilter implements Filter {
 
-    private static final String[] WHITE_LIST = {"/", "/users/signup", "/users/login", "/post", "/comment"};
+    private static final String[] WHITE_LIST = {"/", "/users", "/posts", "/comment"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,7 +26,7 @@ public class LoginFilter implements Filter {
             if (!isWhiteList(requestURI)) {
                 HttpSession session = httpRequest.getSession(false);
 
-                if (session == null || session.getAttribute("user") == null) {
+                if (session == null || session.getAttribute("LOGIN_USER") == null) {
                     throw new RuntimeException("로그인 해주세요.");
                 }
             }

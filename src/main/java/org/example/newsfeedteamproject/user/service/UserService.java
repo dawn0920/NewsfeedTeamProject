@@ -1,13 +1,11 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeedteamproject.user.dto.IsWithdrawnRequestDto;
-import org.example.newsfeedteamproject.user.dto.IsWithdrawnResponseDto;
-import org.example.newsfeedteamproject.user.dto.UserRequestDto;
-import org.example.newsfeedteamproject.user.dto.UserResponseDto;
+import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,13 +17,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto signUp(UserRequestDto requestDto) {
 
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+
         User user = new User(
                 requestDto.getEmail(),
-                requestDto.getPassword(),
+                encodedPassword,
                 requestDto.getUserRefId(),
                 requestDto.getName(),
                 requestDto.getIntro(),
@@ -93,9 +94,9 @@ public class UserService {
                         user.getCreatTime(),
                         user.getModifiedTime()
                 )).toList();
-
     }
 
+    @Transactional
     public void update(Long id, UserRequestDto requestDto) {
 
         User user = userRepository.findById(id)
@@ -106,7 +107,7 @@ public class UserService {
                         )
                 );
 
-        if(!requestDto.getPassword().equals(user.getPassword())){
+        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "패스워드가 일치하지 않습니다."
@@ -133,6 +134,7 @@ public class UserService {
         return str == null || str.trim().isEmpty();
     }
 
+    @Transactional
     public IsWithdrawnResponseDto withdrawn(Long id, IsWithdrawnRequestDto requestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(
@@ -142,12 +144,24 @@ public class UserService {
                         )
                 );
 
-        if(!requestDto.getPassword().equals(user.getPassword())){
+        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
         }
 
         user.withdrawn(requestDto.isWithdrawn());
 
         return new IsWithdrawnResponseDto(user.getId(), user.isWithdrawn());
+    }
+
+    public Long login(LoginRequestDto requestDto) {
+
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "해당 이메일은 존재하지 않습니다."));
+
+        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+        }
+
+        return user.getId();
     }
 }

@@ -1,9 +1,8 @@
-package org.example.newsfeedteamproject.follow.entity;
+package org.example.newsfeedteamproject.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.newsfeedteamproject.user.entity.User;
 
 @Getter
 @Entity

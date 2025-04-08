@@ -15,10 +15,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+
+    /**
+     * 포스트 작성 메소드
+     * @param requestDto
+     * @param userId
+     * @return
+     */
 
     @Transactional
     @Override
@@ -63,9 +72,7 @@ public class PostServiceImpl implements PostService {
             throw new SecurityException("삭제 권한이 없습니다.");
         }
 
-
         postRepository.delete(post);
-
     }
 }
 

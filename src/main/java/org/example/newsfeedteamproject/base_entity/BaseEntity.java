@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.entity;
+package org.example.newsfeedteamproject.base_entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

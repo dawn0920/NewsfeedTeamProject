@@ -1,10 +1,10 @@
 package org.example.newsfeedteamproject.comment.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.base_entity.BaseEntity;
+import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.user.entity.User;
 
@@ -13,13 +13,11 @@ import org.example.newsfeedteamproject.user.entity.User;
 @NoArgsConstructor
 public class Comment extends BaseEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "내용은 필수 입력값입니다.")
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,7 +34,7 @@ public class Comment extends BaseEntity {
         this.contents = contents;
     }
 
-    public void update(String contents) {
-        this.contents = contents;
+    public void update(CommentRequestDto dto) {
+        this.contents = dto.getContents();
     }
 }

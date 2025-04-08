@@ -1,18 +1,13 @@
 package org.example.newsfeedteamproject.user.controller;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.user.dto.UserRequestDto;
 import org.example.newsfeedteamproject.user.dto.UserResponseDto;
 import org.example.newsfeedteamproject.user.dto.*;
-import org.example.newsfeedteamproject.user.entity.User;
-import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -67,7 +62,7 @@ public class UserController {
      * @param requestDto 수정 데이터
      * @return
      */
-    @PatchMapping("update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
 
         userService.update(id, requestDto);

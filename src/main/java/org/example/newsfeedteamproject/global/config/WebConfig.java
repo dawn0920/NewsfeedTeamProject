@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.global;
 
+import org.example.newsfeedteamproject.global.config.LoginFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

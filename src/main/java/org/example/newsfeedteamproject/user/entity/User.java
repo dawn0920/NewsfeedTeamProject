@@ -3,7 +3,7 @@ package org.example.newsfeedteamproject.user.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import org.example.newsfeedteamproject.entity.BaseEntity;
+import org.example.newsfeedteamproject.base_entity.BaseEntity;
 
 
 @Getter
@@ -49,7 +49,6 @@ public class User extends BaseEntity{
     private boolean withdrawn;
 
     public User() {
-
     }
 
     public User(String email, String password, String userRefId, String name, String intro, String profileImg, String birthday, String phone) {
