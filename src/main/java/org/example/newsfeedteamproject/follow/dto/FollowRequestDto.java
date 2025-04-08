@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.follow.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
