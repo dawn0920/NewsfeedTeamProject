@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.post.controller;
 
+import jakarta.persistence.EntityListeners;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.global.consts.Const;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/posts")
+@EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 @RequiredArgsConstructor
 public class PostController {
 
@@ -89,7 +91,7 @@ public class PostController {
      * @param userId 세션에 저장된 로그인 사용자 ID
      * @return HTTP 204 No Content 응답
      */
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId, @SessionAttribute(name = Const.LOGIN_USER) Long userId) {
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
