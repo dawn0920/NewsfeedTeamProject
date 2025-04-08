@@ -13,16 +13,16 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_user")
-    private User toUserId;
+    private User toUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_user")
-    private User fromUserId;
+    private User fromUser;
 
-    public Follow(User toUserId, User fromUserId) {
-        this.toUserId = toUserId;
-        this.fromUserId = fromUserId;
+    public Follow(User toUser, User fromUSer) {
+        this.toUser = toUser;
+        this.fromUser = fromUSer;
     }
 }

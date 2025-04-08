@@ -12,8 +12,8 @@ import org.example.newsfeedteamproject.user.entity.User;
  */
 @Getter
 @Entity
-@Table(name = "post")
 @NoArgsConstructor
+@Table(name = "post")
 public class Post extends BaseEntity {
 
     /**
@@ -48,14 +48,14 @@ public class Post extends BaseEntity {
     /**
      * 좋아요 상태
      */
-    private boolean like;
+//    private boolean like;
 
     /**
      * 프로필 id 외래키
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     public Post(User user, PostRequestDto dto){
@@ -64,7 +64,7 @@ public class Post extends BaseEntity {
         this.img=dto.getImg();
         this.tag=dto.getMention();
         this.mention= dto.getMention();
-        this.like = false;
+//        this.like = false;
     }
 
     public void update(PostRequestDto dto){
