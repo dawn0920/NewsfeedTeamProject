@@ -11,53 +11,51 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor // 클래스 내 final 혹은 @NonNull 이 붙은 필드만 포함하는 생성자
 public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
-    // 팔로우
+
     @Transactional
-    public FollowResponseDto follwoUser(User fromUser, Long toUserId) {
-        // touserid 가져오기
+    public FollowResponseDto toggleFollowUser(User fromUser, Long toUserId) {
+        // userId 찾기
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
 
-        // 중복 확인(boolean)
-        boolean alreadyFollowed = followRepository.existsByFromUserAndToUser(fromUser, toUser);
-        if (alreadyFollowed) {
-            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, "이미 팔로우한 유저입니다.");
+        // 이미 눌렀는지 확인
+        // 엔티티 자체를 가져오기 떄문에 Optional findBy...() + Optional<Follow> 사용
+        Optional<Follow> existingFollow = followRepository.findByFromUserAndToUser(fromUser, toUser);
+
+        if (existingFollow.isPresent()) {
+            // 팔로우 되어 있으면 언팔로우 처리
+            followRepository.delete(existingFollow.get());
+
+            fromUser.decreaseFollowing();
+            toUser.decreaseFollower();
+
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
+
+            int currentFollowCount = followRepository.countByToUser(toUser);
+            return new FollowResponseDto(false, currentFollowCount); // false = 언팔로우 상태
+
+        } else {
+            // 팔로우 안 되어 있으면 팔로우 처리
+            followRepository.save(new Follow(toUser, fromUser));
+
+            fromUser.increaseFollowing();
+            toUser.increaseFollower();
+
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
+
+            int currentFollowCount = followRepository.countByToUser(toUser);
+            return new FollowResponseDto(true, currentFollowCount); // true = 팔로우 상태
         }
-
-        // save
-        followRepository.save(new Follow(toUser, fromUser));
-
-        // 팔로우수 count
-        int currentFollowCount = followRepository.countByToUser(toUser);
-        return new FollowResponseDto(true, currentFollowCount);
-    }
-
-    // 언팔로우
-    @Transactional
-    public FollowResponseDto unfollwoUser(User fromUser, Long toUserId) {
-        // touserid 가져오기
-        User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
-
-        // 중복 확인(boolean)
-        boolean alreadyFollowed = followRepository.existsByFromUserAndToUser(fromUser, toUser);
-        if (!alreadyFollowed) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "팔로우한 적이 없습니다.");
-        }
-
-        // delete
-        followRepository.deleteByFromUserAndToUser(fromUser, toUser);
-
-        // 팔로우수 count
-        int currentFollowCount = followRepository.countByToUser(toUser);
-
-        return new FollowResponseDto(false, currentFollowCount);
     }
 
 }
