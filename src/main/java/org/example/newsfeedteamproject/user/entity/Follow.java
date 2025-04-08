@@ -15,14 +15,14 @@ public class Follow {
 
     @ManyToOne
     @JoinColumn(name = "to_user")
-    private User toUserId;
+    private User toUser;
 
     @ManyToOne
     @JoinColumn(name = "from_user")
-    private User fromUserId;
+    private User fromUser;
 
     public Follow(User toUser, User fromUSer) {
-        this.toUserId = toUserId;
-        this.fromUserId = fromUserId;
+        this.toUser = toUser;
+        this.fromUser = fromUSer;
     }
 }
