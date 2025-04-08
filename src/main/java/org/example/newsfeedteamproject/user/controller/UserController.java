@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.user.dto.UserRequestDto;
 import org.example.newsfeedteamproject.user.dto.UserResponseDto;
+import org.example.newsfeedteamproject.user.dto.*;
+import org.example.newsfeedteamproject.user.dto.FollowRequestDto;
+import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.UserService;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -22,13 +24,14 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final FollowService followService;
 
     /**
      * 회원가입 API
      * @param requestDto 요청 회원 정보
      * @return
      */
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody UserRequestDto requestDto){
 
         UserResponseDto userResponseDto = userService.signUp(requestDto);
@@ -59,5 +62,36 @@ public class UserController {
         List<UserResponseDto> userResponseDtoList = userService.findAll();
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 회원 수정 API
+     * @param id
+     * @param requestDto 수정 데이터
+     * @return
+     */
+    @PatchMapping("update/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
+
+        userService.update(id, requestDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    /**
+     * 회원 탈퇴 API
+     * @param id
+     * @param requestDto
+     * @return
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<IsWithdrawnResponseDto> withdrawn(
+            @PathVariable Long id,
+            @RequestBody IsWithdrawnRequestDto requestDto){
+
+        IsWithdrawnResponseDto isWithdrawnResponseDto = userService.withdrawn(id, requestDto);
+
+        return new ResponseEntity<>(isWithdrawnResponseDto, HttpStatus.OK);
     }
 }

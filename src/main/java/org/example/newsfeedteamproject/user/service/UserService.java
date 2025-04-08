@@ -1,6 +1,8 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.user.dto.IsWithdrawnRequestDto;
+import org.example.newsfeedteamproject.user.dto.IsWithdrawnResponseDto;
 import org.example.newsfeedteamproject.user.dto.UserRequestDto;
 import org.example.newsfeedteamproject.user.dto.UserResponseDto;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -24,7 +26,7 @@ public class UserService {
         User user = new User(
                 requestDto.getEmail(),
                 requestDto.getPassword(),
-                requestDto.getUserId(),
+                requestDto.getUserRefId(),
                 requestDto.getName(),
                 requestDto.getIntro(),
                 requestDto.getProfileImg(),
@@ -37,7 +39,7 @@ public class UserService {
         return new UserResponseDto(
                 user.getId(),
                 user.getEmail(),
-                user.getUserId(),
+                user.getUserRefId(),
                 user.getName(),
                 user.getIntro(),
                 user.getProfileImg(),
@@ -60,7 +62,7 @@ public class UserService {
         return new UserResponseDto(
                 user.getId(),
                 user.getEmail(),
-                user.getUserId(),
+                user.getUserRefId(),
                 user.getName(),
                 user.getIntro(),
                 user.getProfileImg(),
@@ -80,7 +82,7 @@ public class UserService {
                 .map(user -> new UserResponseDto(
                         user.getId(),
                         user.getEmail(),
-                        user.getUserId(),
+                        user.getUserRefId(),
                         user.getName(),
                         user.getIntro(),
                         user.getProfileImg(),
@@ -92,5 +94,60 @@ public class UserService {
                         user.getModifiedTime()
                 )).toList();
 
+    }
+
+    public void update(Long id, UserRequestDto requestDto) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Dose not exist id = " + id
+                        )
+                );
+
+        if(!requestDto.getPassword().equals(user.getPassword())){
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "패스워드가 일치하지 않습니다."
+            );
+        }
+
+        String email = isNullOrEmpty(requestDto.getEmail()) ? user.getEmail() : requestDto.getEmail();
+        String userId = isNullOrEmpty(requestDto.getUserRefId()) ? user.getUserRefId() : requestDto.getUserRefId();
+        String name = isNullOrEmpty(requestDto.getName()) ? user.getName() : requestDto.getName();
+        String intro = isNullOrEmpty(requestDto.getIntro()) ? user.getIntro() : requestDto.getIntro();
+        String profileImg = isNullOrEmpty(requestDto.getProfileImg()) ? user.getProfileImg() : requestDto.getProfileImg();
+        String birthday = isNullOrEmpty(requestDto.getBirthday()) ? user.getBirthday() : requestDto.getBirthday();
+        String phone = isNullOrEmpty(requestDto.getPhone()) ? user.getPhone() : requestDto.getPhone();
+
+        user.update(email, userId, name, intro, profileImg, birthday, phone);
+    }
+
+    /**
+     * null 인지 값이 비어있는지 체크
+     * @param str 수정할 데이터
+     * @return 데이터가 비어있거나 null이면 true, 아니면 false
+     */
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
+    public IsWithdrawnResponseDto withdrawn(Long id, IsWithdrawnRequestDto requestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Dose not exist id = " + id
+                        )
+                );
+
+        if(!requestDto.getPassword().equals(user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+        }
+
+        user.withdrawn(requestDto.isWithdrawn());
+
+        return new IsWithdrawnResponseDto(user.getId(), user.isWithdrawn());
     }
 }
