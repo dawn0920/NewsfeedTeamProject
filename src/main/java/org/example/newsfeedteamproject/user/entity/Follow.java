@@ -21,7 +21,7 @@ public class Follow {
     @JoinColumn(name = "from_user")
     private User fromUserId;
 
-    public Follow(User toUser, User fromUSer) {
+    public Follow(User toUserId, User fromUserId) {
         this.toUserId = toUserId;
         this.fromUserId = fromUserId;
     }

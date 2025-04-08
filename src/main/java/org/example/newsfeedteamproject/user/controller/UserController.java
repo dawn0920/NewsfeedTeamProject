@@ -3,12 +3,9 @@ package org.example.newsfeedteamproject.user.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.dto.FollowRequestDto;
 import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
-import org.example.newsfeedteamproject.user.dto.FollowRequestDto;
-import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
-import org.example.newsfeedteamproject.user.dto.UserRequestDto;
-import org.example.newsfeedteamproject.user.dto.UserResponseDto;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.FollowService;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -34,13 +30,14 @@ public class UserController {
      * @param requestDto 요청 회원 정보
      * @return
      */
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody UserRequestDto requestDto){
 
         UserResponseDto userResponseDto = userService.signUp(requestDto);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
+
     @PostMapping("/follow") // 팔로우
     public  ResponseEntity<FollowResponseDto> followUser(
             @RequestBody FollowRequestDto requestDto,
@@ -95,5 +92,36 @@ public class UserController {
         List<UserResponseDto> userResponseDtoList = userService.findAll();
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 회원 수정 API
+     * @param id
+     * @param requestDto 수정 데이터
+     * @return
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
+
+        userService.update(id, requestDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    /**
+     * 회원 탈퇴 API
+     * @param id
+     * @param requestDto
+     * @return
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> withdrawn(
+            @PathVariable Long id,
+            @RequestBody IsWithdrawnRequestDto requestDto){
+
+        userService.withdrawn(id, requestDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

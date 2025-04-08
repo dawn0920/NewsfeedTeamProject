@@ -43,7 +43,7 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0" )
     private boolean isWithdrawn;
 
     public User() {
@@ -59,5 +59,19 @@ public class User extends BaseEntity{
         this.profileImg = profileImg;
         this.birthday = birthday;
         this.phone = phone;
+    }
+
+    public void update(String email, String userId, String name, String intro, String profileImg, String birthday, String phone){
+        this.email = email;
+        this.userId = userId;
+        this.name = name;
+        this.intro = intro;
+        this.profileImg = profileImg;
+        this.birthday = birthday;
+        this.phone = phone;
+    }
+
+    public void withdrawn(boolean isWithdrawn){
+        this.isWithdrawn = isWithdrawn;
     }
 }
