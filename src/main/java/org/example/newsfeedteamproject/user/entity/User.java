@@ -35,10 +35,10 @@ public class User extends BaseEntity{
     private String birthday;
 
     @Column(nullable = false)
-    private int follow;
+    private int follow = 0;
 
     @Column(nullable = false)
-    private int following;
+    private int following = 0;
 
     @Column(nullable = false)
     private String phone;
@@ -72,5 +72,21 @@ public class User extends BaseEntity{
 
     public void withdrawn(boolean withdrawn){
         this.withdrawn = withdrawn;
+    }
+
+    public void increaseFollower() {
+        this.follow++;
+    }
+
+    public void decreaseFollower() {
+        this.follow = Math.max(0, this.follow - 1); // 0 이하로 내려가지 않게
+    }
+
+    public void increaseFollowing() {
+        this.following++;
+    }
+
+    public void decreaseFollowing() {
+        this.following = Math.max(0, this.following - 1);
     }
 }
