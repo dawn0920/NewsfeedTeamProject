@@ -12,7 +12,7 @@ public class UserResponseDto {
 
     private final String email;
 
-    private final String userId;
+    private final String userRefId;
 
     private final String name;
 
@@ -32,10 +32,10 @@ public class UserResponseDto {
 
     private final LocalDateTime modifiedTime;
 
-    public UserResponseDto(Long id, String email, String userId, String name, String intro, String profileImg, String birthday, int follow, int following, String phone, LocalDateTime createdTime, LocalDateTime modifiedTime) {
+    public UserResponseDto(Long id, String email, String userRefId, String name, String intro, String profileImg, String birthday, int follow, int following, String phone, LocalDateTime createdTime, LocalDateTime modifiedTime) {
         this.id = id;
         this.email = email;
-        this.userId = userId;
+        this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
         this.profileImg = profileImg;
