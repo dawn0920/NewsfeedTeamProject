@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.post.service;
 
+import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
 import org.springframework.data.domain.Page;
@@ -54,4 +55,6 @@ public interface PostService {
      * @param userId 요청자의 사용자 ID
      */
     void deletePost(Long postId, Long userId);
+
+    Page<CommentResponseDto> getPostByUserId(Long userId, Pageable pageable);
 }
