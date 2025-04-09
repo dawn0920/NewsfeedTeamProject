@@ -30,7 +30,7 @@ public class CommentController {
      * @return
      */
 
-    @PostMapping("/posts/{postId}/comment")
+    @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponseDto> postComment
     (@SessionAttribute(name = "LOGIN_USER") Long userId,
      @PathVariable Long postId,
@@ -44,7 +44,7 @@ public class CommentController {
      * @return
      */
 
-    @GetMapping("/posts/{postId}/comment")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<CommentResponseDto>> findByComment(@PathVariable Long postId) {
         return ResponseEntity.ok(commentService.findByComment(postId));
     }
@@ -56,7 +56,7 @@ public class CommentController {
      * @return
      */
 
-    @GetMapping("/posts/{postId}/comments")
+    @GetMapping("/posts/{postId}/comments/page")
     public ResponseEntity<Page<CommentResponseDto>> getPostPage
     (@PathVariable Long postId,
      @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -69,7 +69,7 @@ public class CommentController {
      * @return
      */
 
-    @GetMapping("/users/information/comment/{userId}")
+    @GetMapping("/users/information/{userId}/comment")
     public ResponseEntity<Page<CommentResponseDto>> getCommentPage
     (@PathVariable Long userId,
      @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -83,13 +83,14 @@ public class CommentController {
      * @param requestDto
      * @return
      */
-    @PutMapping("/comment/{commentId}")
+    @PutMapping("posts/{postId}/comment/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @SessionAttribute(name = "LOGIN_USER") Long userId,
             @PathVariable Long commentId,
+            @PathVariable Long postId,
             @Valid @RequestBody CommentRequestDto requestDto
     ) {
-        return new ResponseEntity<>(commentService.updateComment(userId, commentId, requestDto),HttpStatus.OK);
+        return new ResponseEntity<>(commentService.updateComment(postId, commentId, requestDto),HttpStatus.OK);
     }
 
     /**
@@ -99,12 +100,13 @@ public class CommentController {
      * @return
      */
 
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("posts/{postId}/comment/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @SessionAttribute(name = "LOGIN_USER") Long userId,
-            @PathVariable Long commentId
+            @PathVariable Long commentId,
+            @PathVariable Long postId
     ) {
-        commentService.deleteComment(commentId, userId);
+        commentService.deleteComment(commentId, userId,postId);
         return ResponseEntity.ok().build();
     }
 }
