@@ -8,6 +8,7 @@ import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class LoginController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginRequestDto requestDto, HttpServletRequest request){
+    public ResponseEntity<Void> login(@Validated @RequestBody LoginRequestDto requestDto, HttpServletRequest request){
 
         Long userId = userService.login(requestDto);
         HttpSession session = request.getSession();

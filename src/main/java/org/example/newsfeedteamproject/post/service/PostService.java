@@ -2,6 +2,8 @@ package org.example.newsfeedteamproject.post.service;
 
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public interface PostService {
      *
      * @return 게시글 응답 DTO 리스트
      */
-    List<PostResponseDto> getAllPosts();
+    Page<PostResponseDto> getAllPosts(Pageable pageable);
 
     /**
      * 게시글 ID로 단일 게시글을 조회합니다.

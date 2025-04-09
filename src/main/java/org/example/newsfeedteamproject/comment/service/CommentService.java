@@ -103,7 +103,7 @@ public class CommentService {
     /**
      * 특정 게시글에 달린 댓글을 삭제합니다.
      * @param userId
-     * @param id
+     * @param commentId
      * @return
      */
 

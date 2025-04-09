@@ -75,7 +75,7 @@ public class Post extends BaseEntity {
         this.user = user;
         this.contents = dto.getContents();
         this.img=dto.getImg();
-        this.tag=dto.getMention();
+        this.tag=dto.getTag();
         this.mention= dto.getMention();
     }
 

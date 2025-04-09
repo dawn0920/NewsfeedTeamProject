@@ -12,6 +12,7 @@ import org.example.newsfeedteamproject.user.service.FollowService;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,7 +31,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@RequestBody UserRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> signUp(@Validated @RequestBody UserRequestDto requestDto){
 
         UserResponseDto userResponseDto = userService.signUp(requestDto);
 
@@ -69,7 +70,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto){
+    public ResponseEntity<Void> update(@PathVariable Long id, @Validated @RequestBody UserRequestDto requestDto){
 
         userService.update(id, requestDto);
 
@@ -86,7 +87,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<IsWithdrawnResponseDto> withdrawn(
             @PathVariable Long id,
-            @RequestBody IsWithdrawnRequestDto requestDto){
+            @Validated @RequestBody IsWithdrawnRequestDto requestDto){
 
         IsWithdrawnResponseDto isWithdrawnResponseDto = userService.withdrawn(id, requestDto);
 
