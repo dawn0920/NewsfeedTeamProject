@@ -39,6 +39,8 @@ public class PostResponseDto {
      */
     private final String mention;
 
+    private final int postLike;
+
     /**
      * 게시글 작성자(유저)의 ID
      */
@@ -65,10 +67,10 @@ public class PostResponseDto {
         this.img = post.getImg();
         this.tag = post.getTag();
         this.mention = post.getMention();
-//        this.like=post.isLike();
         this.userId = post.getUser().getId();
         this.createdAt = post.getCreatTime();
         this.updatedAt = post.getModifiedTime();
+        this.postLike = post.getPostLike();
     }
 
 }

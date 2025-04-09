@@ -5,8 +5,6 @@ import org.example.newsfeedteamproject.post.dto.PostResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 /**
  * 게시글(Post) 관련 서비스 인터페이스
  * 게시글 생성, 조회, 수정, 삭제 기능을 정의
@@ -54,4 +52,6 @@ public interface PostService {
      * @param userId 요청자의 사용자 ID
      */
     void deletePost(Long postId, Long userId);
+
+    Page<PostResponseDto> getPostByUserId(Long userId, Pageable pageable);
 }

@@ -3,6 +3,7 @@ package org.example.newsfeedteamproject.post.controller;
 import jakarta.persistence.EntityListeners;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.global.consts.Const;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
@@ -10,7 +11,9 @@ import org.example.newsfeedteamproject.post.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +46,14 @@ public class PostController {
         PostResponseDto savedPost = postService.savePost(requestDto, userId);
         return ResponseEntity.ok(savedPost);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<PostResponseDto>> getPostPage(
+            @PathVariable Long userId,
+            @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC)Pageable pageable) {
+                return new ResponseEntity<>(postService.getPostByUserId(userId, pageable), HttpStatus.OK);
+    }
+
 
     /**
      * 전체 게시글 목록을 조회합니다.

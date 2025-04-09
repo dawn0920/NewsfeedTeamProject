@@ -1,5 +1,7 @@
 package org.example.newsfeedteamproject.post.service;
 
+import org.example.newsfeedteamproject.global.error.CustomException;
+import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
@@ -11,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 /**
@@ -103,6 +103,18 @@ public class PostServiceImpl implements PostService {
         }
 
         postRepository.delete(post);
+    }
+
+   @Transactional(readOnly = true)
+    public Page<PostResponseDto> getPostByUserId(Long userId, Pageable pageable) {
+
+        Page<Post> posts = postRepository.findByUserId(userId, pageable);
+
+        if(posts ==null) {
+            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+        }
+
+        return posts.map(PostResponseDto::new);
     }
 }
 

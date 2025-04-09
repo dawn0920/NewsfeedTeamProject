@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostLikeService {
@@ -28,17 +30,26 @@ public class PostLikeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
 
         // 이미 눌려있는지 확인
-        boolean alreadyLiked = postLikeReopsitory.existsByFromUserAndToPost(fromUser, toPost);
+        Optional<PostLikes> existiongLiked = postLikeReopsitory.findByFromUserAndToPost(fromUser, toPost);
 
-        if (alreadyLiked) {
-            // 좋아요 취소
-            postLikeReopsitory.deleteByFromUserAndToPost(fromUser, toPost);
+        if (existiongLiked.isPresent()) {
+            // 좋아요가 되어있으면 취소
+            postLikeReopsitory.delete(existiongLiked.get());
+
+            toPost.decreaseLike();
+            postRepository.save(toPost);
+
+            int currentLikeCount = postLikeReopsitory.countByToPost(toPost);
+            return new PostLikeResponseDto(false, currentLikeCount);
         } else {
             // 좋아요
             postLikeReopsitory.save(new PostLikes(fromUser, toPost));
-        }
 
-        int likeCount = postLikeReopsitory.countByToPost(toPost);
-        return new PostLikeResponseDto(!alreadyLiked, likeCount);
+            toPost.increaseLike();
+            postRepository.save(toPost);
+
+            int currentLikeCount = postLikeReopsitory.countByToPost(toPost);
+            return new PostLikeResponseDto(true, currentLikeCount);
+        }
     }
 }

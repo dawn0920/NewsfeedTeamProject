@@ -108,10 +108,12 @@ public class CommentService {
      */
 
     @Transactional
-    public void deleteComment(Long commentId, Long userId) {
+    public void deleteComment(Long commentId, Long userId,Long postId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
 
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
         if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 댓글만 삭제할 수 있습니다.");
         }
