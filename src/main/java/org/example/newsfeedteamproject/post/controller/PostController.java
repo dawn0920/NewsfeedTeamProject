@@ -7,6 +7,10 @@ import org.example.newsfeedteamproject.global.consts.Const;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
 import org.example.newsfeedteamproject.post.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +50,10 @@ public class PostController {
      * @return 게시글 목록
      */
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> posts = postService.getAllPosts();
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(
+            @PageableDefault(size = 10, sort = "creatTime", direction = org.springframework.data.domain.Sort.Direction.DESC)
+            Pageable pageable) {
+        Page<PostResponseDto> posts = postService.getAllPosts(pageable);
         return ResponseEntity.ok(posts);
     }
 

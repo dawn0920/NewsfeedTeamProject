@@ -41,7 +41,6 @@ public class CommentController {
     /**
      * 특정 포스트에 달린 댓글을 보여줍니다.
      * @param postId
-     * @param pageable
      * @return
      */
 
@@ -57,7 +56,7 @@ public class CommentController {
      * @return
      */
 
-    @GetMapping("/posts/{postId}")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<Page<CommentResponseDto>> getPostPage
     (@PathVariable Long postId,
      @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -96,7 +95,7 @@ public class CommentController {
     /**
      * 특정 게시글에 달린 댓글을 삭제합니다.
      * @param userId
-     * @param id
+     * @param commentId
      * @return
      */
 
