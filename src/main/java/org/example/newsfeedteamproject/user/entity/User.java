@@ -1,9 +1,12 @@
 package org.example.newsfeedteamproject.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import org.example.newsfeedteamproject.base_entity.BaseEntity;
+import org.springframework.validation.annotation.Validated;
 
 
 @Getter
