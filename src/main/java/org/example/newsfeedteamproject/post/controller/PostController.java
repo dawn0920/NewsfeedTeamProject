@@ -47,8 +47,8 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<CommentResponseDto>> getPostPage(
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<PostResponseDto>> getPostPage(
             @PathVariable Long userId,
             @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC)Pageable pageable) {
                 return new ResponseEntity<>(postService.getPostByUserId(userId, pageable), HttpStatus.OK);
