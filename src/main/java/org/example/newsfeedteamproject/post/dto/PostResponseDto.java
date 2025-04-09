@@ -39,7 +39,7 @@ public class PostResponseDto {
      */
     private final String mention;
 
-    private final int like;
+    private final int postLike;
 
     /**
      * 게시글 작성자(유저)의 ID
@@ -70,7 +70,7 @@ public class PostResponseDto {
         this.userId = post.getUser().getId();
         this.createdAt = post.getCreatTime();
         this.updatedAt = post.getModifiedTime();
-        this.like = post.getLike();
+        this.postLike = post.getPostLike();
     }
 
 }

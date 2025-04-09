@@ -54,7 +54,7 @@ public class Post extends BaseEntity {
      * 좋아요 상태
      */
     @Column(nullable = false)
-    private int like = 0;
+    private int postLike = 0;
 
 
     /**
@@ -87,11 +87,11 @@ public class Post extends BaseEntity {
     }
 
     public void increaseLike(){
-        this.like++;
+        this.postLike++;
     }
 
     public void decreaseLike() {
-        this.like = Math.max(0, this.like - 1); // 0 이하로 내려가지 않게
+        this.postLike = Math.max(0, this.postLike - 1); // 0 이하로 내려가지 않게
     }
 
 }
