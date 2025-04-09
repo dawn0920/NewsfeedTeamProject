@@ -53,7 +53,8 @@ public class Post extends BaseEntity {
     /**
      * 좋아요 상태
      */
-//    private boolean like;
+    @Column(nullable = false)
+    private int like = 0;
 
 
     /**
@@ -76,7 +77,6 @@ public class Post extends BaseEntity {
         this.img=dto.getImg();
         this.tag=dto.getMention();
         this.mention= dto.getMention();
-//        this.like = false;
     }
 
     public void update(PostRequestDto dto){
@@ -84,6 +84,14 @@ public class Post extends BaseEntity {
         this.img = dto.getImg();
         this.tag = dto.getTag();
         this.mention = dto.getMention();
+    }
+
+    public void increaseLike(){
+        this.like++;
+    }
+
+    public void decreaseLike() {
+        this.like = Math.max(0, this.like - 1); // 0 이하로 내려가지 않게
     }
 
 }
