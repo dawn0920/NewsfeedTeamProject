@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class FollowController {
-    private final UserService userService;
     private final FollowService followService;
     private final UserRepository userRepository;
 
