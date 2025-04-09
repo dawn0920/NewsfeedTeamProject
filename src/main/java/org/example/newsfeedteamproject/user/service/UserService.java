@@ -30,27 +30,13 @@ public class UserService {
                 requestDto.getUserRefId(),
                 requestDto.getName(),
                 requestDto.getIntro(),
-                requestDto.getProfileImg(),
                 requestDto.getBirthday(),
                 requestDto.getPhone()
         );
 
        userRepository.save(user);
 
-        return new UserResponseDto(
-                user.getId(),
-                user.getEmail(),
-                user.getUserRefId(),
-                user.getName(),
-                user.getIntro(),
-                user.getProfileImg(),
-                user.getBirthday(),
-                user.getFollow(),
-                user.getFollowing(),
-                user.getPhone(),
-                user.getCreatTime(),
-                user.getModifiedTime()
-        );
+        return new UserResponseDto(user);
     }
 
     public UserResponseDto findById(Long id) {
@@ -60,44 +46,22 @@ public class UserService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dose not exist id = " + id)
         );
 
-        return new UserResponseDto(
-                user.getId(),
-                user.getEmail(),
-                user.getUserRefId(),
-                user.getName(),
-                user.getIntro(),
-                user.getProfileImg(),
-                user.getBirthday(),
-                user.getFollow(),
-                user.getFollowing(),
-                user.getPhone(),
-                user.getCreatTime(),
-                user.getModifiedTime()
-        );
+        if(user.isWithdrawn()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
+        }
+
+        return new UserResponseDto(user);
     }
 
     public List<UserResponseDto> findAll() {
 
-        return userRepository.findAll()
+        return userRepository.findByWithdrawnFalse()
                 .stream()
-                .map(user -> new UserResponseDto(
-                        user.getId(),
-                        user.getEmail(),
-                        user.getUserRefId(),
-                        user.getName(),
-                        user.getIntro(),
-                        user.getProfileImg(),
-                        user.getBirthday(),
-                        user.getFollow(),
-                        user.getFollowing(),
-                        user.getPhone(),
-                        user.getCreatTime(),
-                        user.getModifiedTime()
-                )).toList();
+                .map(UserResponseDto::toDto).toList();
     }
 
     @Transactional
-    public void update(Long id, UserRequestDto requestDto) {
+    public void update(Long id, UserUpdateRequestDto requestDto) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(
@@ -106,6 +70,10 @@ public class UserService {
                                 "Dose not exist id = " + id
                         )
                 );
+
+        if(user.isWithdrawn()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
+        }
 
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
             throw new ResponseStatusException(
@@ -118,11 +86,10 @@ public class UserService {
         String userId = isNullOrEmpty(requestDto.getUserRefId()) ? user.getUserRefId() : requestDto.getUserRefId();
         String name = isNullOrEmpty(requestDto.getName()) ? user.getName() : requestDto.getName();
         String intro = isNullOrEmpty(requestDto.getIntro()) ? user.getIntro() : requestDto.getIntro();
-        String profileImg = isNullOrEmpty(requestDto.getProfileImg()) ? user.getProfileImg() : requestDto.getProfileImg();
         String birthday = isNullOrEmpty(requestDto.getBirthday()) ? user.getBirthday() : requestDto.getBirthday();
         String phone = isNullOrEmpty(requestDto.getPhone()) ? user.getPhone() : requestDto.getPhone();
 
-        user.update(email, userId, name, intro, profileImg, birthday, phone);
+        user.update(email, userId, name, intro, birthday, phone);
     }
 
     /**
@@ -164,4 +131,5 @@ public class UserService {
 
         return user.getId();
     }
+
 }

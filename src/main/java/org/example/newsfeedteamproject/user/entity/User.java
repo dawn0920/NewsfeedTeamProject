@@ -11,17 +11,17 @@ import org.springframework.validation.annotation.Validated;
 
 @Getter
 @Entity
-@Table(name = "`user`")
+@Table(name = "users")
 public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String password;
 
     @Column(nullable = false, unique = true)
@@ -33,8 +33,11 @@ public class User extends BaseEntity{
     @Column(nullable = true)
     private String intro;
 
-    @Column(nullable = false)
-    private String profileImg;
+//    @Column(nullable = true)
+//    private String fileName;
+//
+//    @Column(nullable = true)
+//    private String filePath;
 
     @Column(nullable = false)
     private String birthday;
@@ -54,23 +57,22 @@ public class User extends BaseEntity{
     public User() {
     }
 
-    public User(String email, String password, String userRefId, String name, String intro, String profileImg, String birthday, String phone) {
+    public User(String email, String password, String userRefId, String name, String intro, String birthday, String phone) {
         this.email = email;
         this.password = password;
         this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
-        this.profileImg = profileImg;
         this.birthday = birthday;
         this.phone = phone;
     }
 
-    public void update(String email, String userRefId, String name, String intro, String profileImg, String birthday, String phone){
+
+    public void update(String email, String userRefId, String name, String intro, String birthday, String phone){
         this.email = email;
         this.userRefId = userRefId;
         this.name = name;
         this.intro = intro;
-        this.profileImg = profileImg;
         this.birthday = birthday;
         this.phone = phone;
     }

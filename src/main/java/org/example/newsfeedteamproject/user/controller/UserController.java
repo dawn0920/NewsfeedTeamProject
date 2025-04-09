@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -33,7 +34,10 @@ public class UserController {
      * @return
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Validated @RequestBody UserRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> signUp(
+            @Validated @RequestBody UserRequestDto requestDto
+//            @RequestParam("file") MultipartFile file
+    ){
 
         UserResponseDto userResponseDto = userService.signUp(requestDto);
 
@@ -72,7 +76,10 @@ public class UserController {
      * @return
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Validated @RequestBody UserRequestDto requestDto){
+    public ResponseEntity<Void> update(
+            @PathVariable Long id,
+            @Validated @RequestBody UserUpdateRequestDto requestDto
+    ){
 
         userService.update(id, requestDto);
 
