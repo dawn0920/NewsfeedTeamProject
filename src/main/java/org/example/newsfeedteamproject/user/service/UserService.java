@@ -29,7 +29,6 @@ public class UserService {
                 encodedPassword,
                 requestDto.getUserRefId(),
                 requestDto.getName(),
-                requestDto.getIntro(),
                 requestDto.getBirthday(),
                 requestDto.getPhone()
         );
@@ -85,11 +84,10 @@ public class UserService {
         String email = isNullOrEmpty(requestDto.getEmail()) ? user.getEmail() : requestDto.getEmail();
         String userId = isNullOrEmpty(requestDto.getUserRefId()) ? user.getUserRefId() : requestDto.getUserRefId();
         String name = isNullOrEmpty(requestDto.getName()) ? user.getName() : requestDto.getName();
-        String intro = isNullOrEmpty(requestDto.getIntro()) ? user.getIntro() : requestDto.getIntro();
         String birthday = isNullOrEmpty(requestDto.getBirthday()) ? user.getBirthday() : requestDto.getBirthday();
         String phone = isNullOrEmpty(requestDto.getPhone()) ? user.getPhone() : requestDto.getPhone();
 
-        user.update(email, userId, name, intro, birthday, phone);
+        user.update(email, userId, name, birthday, phone);
     }
 
     /**
