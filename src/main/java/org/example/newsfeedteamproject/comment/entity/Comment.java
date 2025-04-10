@@ -18,6 +18,9 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private int commentLike;
+
+    @Column(nullable = false)
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,5 +39,11 @@ public class Comment extends BaseEntity {
 
     public void update(CommentRequestDto dto) {
         this.contents = dto.getContents();
+    }
+
+    public void increaseLike() {this.commentLike++;}
+
+    public void decreaseLike(){
+        this.commentLike = Math.max(0,this.commentLike - 1);
     }
 }
