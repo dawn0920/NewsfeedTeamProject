@@ -24,7 +24,7 @@ public class FollowController {
     private final FollowService followService;
     private final UserRepository userRepository;
 
-
+    // 팔로우 언팔로우
     @PostMapping("/{toUserId}/follow")
     public ResponseEntity<FollowResponseDto> toggleFollow(
             @PathVariable Long toUserId,
@@ -38,6 +38,7 @@ public class FollowController {
         return ResponseEntity.ok(responseDto);
     }
 
+    // 팔로잉 리스트 조회
     @GetMapping("{userId}/following")
     public ResponseEntity<List<FollowDto>> getFollowing(
             @PathVariable Long userId
@@ -50,6 +51,7 @@ public class FollowController {
         return ResponseEntity.ok(followings);
     }
 
+    // 팔로우 리스트 조회
     @GetMapping("{userId}/follower")
     public ResponseEntity<List<FollowDto>> getFollower(
             @PathVariable Long userId
