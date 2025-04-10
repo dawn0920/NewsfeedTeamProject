@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.post.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 /**
@@ -11,22 +12,23 @@ public class PostRequestDto {
     /**
      * 게시글 내용 (필수)
      */
-    private String contents;
+    @NotBlank(message = "내용은 필수 입력값 입니다.")
+    private final String contents;
 
     /**
      * 해시 태그
      */
-    private String tag;
+    private final String tag;
 
     /**
      * 이미지 (Base64 인코딩된 문자열, 선택)
      */
-    private String img;
+    private final String img;
 
     /**
      * 멘션 (선택, 사용자 태그)
      */
-    private String mention;
+    private final String mention;
 
     /**
      * 모든 필드를 초기화하는 생성자입니다.

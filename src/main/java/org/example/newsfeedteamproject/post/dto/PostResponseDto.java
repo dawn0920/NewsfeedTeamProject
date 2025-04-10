@@ -2,6 +2,7 @@ package org.example.newsfeedteamproject.post.dto;
 
 import lombok.Getter;
 import org.example.newsfeedteamproject.post.entity.Post;
+import org.example.newsfeedteamproject.user.entity.User;
 
 
 import java.time.LocalDateTime;
@@ -68,6 +69,23 @@ public class PostResponseDto {
         this.tag = post.getTag();
         this.mention = post.getMention();
         this.userId = post.getUser().getId();
+        this.createdAt = post.getCreatTime();
+        this.updatedAt = post.getModifiedTime();
+        this.postLike = post.getPostLike();
+    }
+
+    /**
+     * 게시글 단건 조회를 위한 전용 생성자
+     * @param post 게시글 엔티티 객체
+     * @param user 유저 엔티티 객체
+     */
+    public PostResponseDto(Post post, User user) {
+        this.id = post.getId();
+        this.contents = post.getContents();
+        this.img = post.getImg();
+        this.tag = post.getTag();
+        this.mention = post.getMention();
+        this.userId = user.getId();
         this.createdAt = post.getCreatTime();
         this.updatedAt = post.getModifiedTime();
         this.postLike = post.getPostLike();

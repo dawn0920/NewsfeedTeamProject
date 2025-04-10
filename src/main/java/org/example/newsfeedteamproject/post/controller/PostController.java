@@ -47,7 +47,13 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
-    @GetMapping("/user/{userId}")
+    /**
+     *
+     * @param userId 사용자 ID
+     * @param pageable 페이징 기능
+     * @return 해당 유저의 게시글 페이징
+     */
+    @GetMapping("/{userId}")
     public ResponseEntity<Page<PostResponseDto>> getPostPage(
             @PathVariable Long userId,
             @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC)Pageable pageable) {
@@ -70,14 +76,14 @@ public class PostController {
 
     /**
      * 특정 게시글을 ID로 조회합니다.
-     *
+     * @param userId 특정 유저의 ID
      * @param postId 조회할 게시글 ID
      * @return 게시글 응답 데이터
      */
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId) {
+    @GetMapping("/{postId}/{userId}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId, @PathVariable Long userId) {
 
-        PostResponseDto post = postService.getPostById(postId);
+        PostResponseDto post = postService.getPostById(postId,userId);
 
         return ResponseEntity.ok(post);
 

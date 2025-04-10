@@ -58,12 +58,14 @@ public class PostServiceImpl implements PostService {
      * 특정 게시글을 조회합니다.
      *
      * @param postId 조회할 게시글의 ID
+     * @param userId
      * @return 게시글 응답 DTO
      */
     @Override
-    public PostResponseDto getPostById(Long postId) {
+    public PostResponseDto getPostById(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        return new PostResponseDto(post);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        return new PostResponseDto(post,user);
     }
 
     /**
@@ -105,6 +107,12 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
+    /**
+     * 특정 유저가 작성한 게시글을 페이징하는 메소드
+     * @param userId 특정 유저의 Id
+     * @param pageable 페이징
+     * @return 특정 유저 게시글 페이징 dto
+     */
    @Transactional(readOnly = true)
     public Page<PostResponseDto> getPostByUserId(Long userId, Pageable pageable) {
 

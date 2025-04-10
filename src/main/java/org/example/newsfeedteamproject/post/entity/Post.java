@@ -3,6 +3,7 @@ package org.example.newsfeedteamproject.post.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.newsfeedteamproject.PostLikes.entity.PostLikes;
 import org.example.newsfeedteamproject.base_entity.BaseEntity;
 import org.example.newsfeedteamproject.comment.entity.Comment;
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
@@ -37,7 +38,6 @@ public class Post extends BaseEntity {
     /**
      * base64 이미지
      */
-    @Column(nullable = false)
     private String img;
 
     /**
@@ -63,10 +63,16 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private final List<Comment> comments = new ArrayList<>();
 
+
+    /**
+     * 좋아요 연관관계
+     */
+    @OneToMany(mappedBy = "toPost")
+    private final List<PostLikes> postLikes = new ArrayList<>();
+
     /**
      * 프로필 id 외래키
      */
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;

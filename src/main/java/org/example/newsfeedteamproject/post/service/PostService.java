@@ -31,9 +31,10 @@ public interface PostService {
      * 게시글 ID로 단일 게시글을 조회합니다.
      *
      * @param postId 조회할 게시글의 ID
+     * @param userId
      * @return 게시글 응답 DTO
      */
-    PostResponseDto getPostById(Long postId);
+    PostResponseDto getPostById(Long postId, Long userId);
 
     /**
      * 게시글을 수정합니다.
