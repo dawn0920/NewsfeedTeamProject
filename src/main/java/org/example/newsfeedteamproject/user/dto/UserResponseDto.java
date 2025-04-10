@@ -30,6 +30,8 @@ public class UserResponseDto {
 
     private final LocalDateTime modifiedTime;
 
+    private final String fileName;
+
     public UserResponseDto(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
@@ -42,6 +44,7 @@ public class UserResponseDto {
         this.phone = user.getPhone();
         this.createdTime = user.getCreatTime();
         this.modifiedTime = user.getModifiedTime();
+        this.fileName = user.getFileName();
     }
 
     public static UserResponseDto toDto(User user){

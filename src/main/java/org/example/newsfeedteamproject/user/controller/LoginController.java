@@ -21,6 +21,12 @@ public class LoginController {
 
     private final UserService userService;
 
+    /**
+     * 로그인 API
+     * @param requestDto 로그인 정보
+     * @param request 세션 생성
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Validated @RequestBody LoginRequestDto requestDto, HttpServletRequest request){
 
@@ -31,6 +37,11 @@ public class LoginController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * 로그아웃
+     * @param request 세션 삭제
+     * @return
+     */
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request){
 

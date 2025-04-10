@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,9 +34,8 @@ public class UserController {
      */
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(
-            @Validated @RequestBody UserRequestDto requestDto
-//            @RequestParam("file") MultipartFile file
-    ){
+            @Validated @ModelAttribute UserRequestDto requestDto
+    ) throws IOException {
 
         UserResponseDto userResponseDto = userService.signUp(requestDto);
 

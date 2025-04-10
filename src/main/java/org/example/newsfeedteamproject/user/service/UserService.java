@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -19,8 +22,26 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Transactional
-    public UserResponseDto signUp(UserRequestDto requestDto) {
+    public UserResponseDto signUp(UserRequestDto requestDto) throws IOException {
+
+
+        String originalFilename = requestDto.getFile().getOriginalFilename();
+        String filePath = uploadDir + File.separator + originalFilename;
+
+        // 폴더 없으면 생성
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            boolean created = dir.mkdirs();
+            System.out.println("업로드 폴더 생성 여부: " + created);
+        }
+
+        // 파일 저장
+        File dest = new File(filePath);
+        requestDto.getFile().transferTo(dest);
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
@@ -30,7 +51,9 @@ public class UserService {
                 requestDto.getUserRefId(),
                 requestDto.getName(),
                 requestDto.getBirthday(),
-                requestDto.getPhone()
+                requestDto.getPhone(),
+                originalFilename,
+                filePath
         );
 
        userRepository.save(user);
@@ -38,6 +61,11 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public UserResponseDto findById(Long id) {
 
         User user = userRepository.findById(id)
@@ -59,6 +87,11 @@ public class UserService {
                 .map(UserResponseDto::toDto).toList();
     }
 
+    /**
+     *
+     * @param id
+     * @param requestDto
+     */
     @Transactional
     public void update(Long id, UserUpdateRequestDto requestDto) {
 
