@@ -87,12 +87,12 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
+                        () -> new CustomException(ExceptionCode.USER_NOT_FOUND)
         );
 
         // isWithdrawn 값이 true 이면 탈퇴된 계정이므로 예외처리
         if(user.isWithdrawn()){
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
         }
         return new UserResponseDto(user);
     }
@@ -120,11 +120,11 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
+                        () -> new CustomException(ExceptionCode.USER_NOT_FOUND)
                 );
         // isWithdrawn 값이 true 이면 탈퇴된 계정이므로 예외처리
         if(user.isWithdrawn()){
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
         }
 
         // 패스워드 본인 인증
@@ -167,7 +167,7 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
+                        () -> new CustomException(ExceptionCode.USER_NOT_FOUND)
                 );
 
         // 패스워드 본인 인증
@@ -189,7 +189,7 @@ public class UserService {
 
         // 요청한 이메일이 DB에 있는지 찾고 있으면 user 객체로 생성
         User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+                .orElseThrow(() -> new CustomException(ExceptionCode.EMAIL_ALREADY_EXISTS));
 
         // 패스워드 본인 인증
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
@@ -198,7 +198,7 @@ public class UserService {
 
         // 탈퇴된 계정 로그인 불가
         if(user.isWithdrawn()){
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
         }
 
         return user.getId();

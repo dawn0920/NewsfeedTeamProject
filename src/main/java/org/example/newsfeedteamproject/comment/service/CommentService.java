@@ -39,9 +39,9 @@ public class CommentService {
     @Transactional
     public CommentResponseDto addComment(Long userId,Long postId, CommentRequestDto requestDto) {
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ExceptionCode.POST_NOT_FOUND));
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         Comment comment = CommentFactory.saveComment(post, user, requestDto);
         return new CommentResponseDto(commentRepository.save(comment));
@@ -58,7 +58,7 @@ public class CommentService {
         Slice<Comment> comments = commentRepository.findByPostId(postId, pageable);
 
         if(comments == null) {
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
 
         return comments.map(CommentResponseDto::new);
@@ -77,7 +77,7 @@ public class CommentService {
         Slice<Comment> comments = commentRepository.findByUserId(userId, pageable);
 
         if(comments == null) {
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
 
         return comments.map(CommentResponseDto::new);
@@ -94,7 +94,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+                .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.");
@@ -114,12 +114,12 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId, Long userId,Long postId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+                .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+                .orElseThrow(() -> new CustomException(ExceptionCode.POST_NOT_FOUND));
         if (!comment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+            throw new CustomException(ExceptionCode.NO_DELETE_PERMISSION);
         }
 
         commentRepository.delete(comment);

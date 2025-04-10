@@ -1,6 +1,8 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.global.error.CustomException;
+import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
 import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -24,7 +26,7 @@ public class FollowService {
     public FollowResponseDto toggleFollowUser(User fromUser, Long toUserId) {
         // userId 찾기
         User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         // 이미 눌렀는지 확인
         // 엔티티 자체를 가져오기 떄문에 Optional findBy...() + Optional<Follow> 사용

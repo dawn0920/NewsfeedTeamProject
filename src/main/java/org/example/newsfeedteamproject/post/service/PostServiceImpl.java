@@ -79,10 +79,10 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, Long userId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ExceptionCode.POST_NOT_FOUND));
 
         if (!post.getUser().getId().equals(userId)) {
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw  new CustomException(ExceptionCode.NO_EDIT_PERMISSION);
         }
 
         post.update(requestDto);
@@ -99,9 +99,9 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public void deletePost(Long postId, Long userId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         if (!post.getUser().getId().equals(userId)) {
-            throw new SecurityException("삭제 권한이 없습니다.");
+            throw new CustomException(ExceptionCode.NO_DELETE_PERMISSION);
         }
 
         postRepository.delete(post);
@@ -119,7 +119,7 @@ public class PostServiceImpl implements PostService {
         Page<Post> posts = postRepository.findByUserId(userId, pageable);
 
         if(posts ==null) {
-            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
+            throw new CustomException(ExceptionCode.POST_NOT_FOUND);
         }
 
         return posts.map(PostResponseDto::new);

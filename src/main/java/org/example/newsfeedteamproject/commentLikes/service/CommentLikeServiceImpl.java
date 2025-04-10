@@ -7,8 +7,9 @@ import org.example.newsfeedteamproject.comment.repository.CommentRepository;
 import org.example.newsfeedteamproject.commentLikes.dto.CommentLikeResponseDto;
 import org.example.newsfeedteamproject.commentLikes.entity.CommentLikes;
 import org.example.newsfeedteamproject.commentLikes.repository.CommentLikeRepository;
+import org.example.newsfeedteamproject.global.error.CustomException;
+import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.entity.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,7 +38,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     public CommentLikeResponseDto toggleCommentLike(User fromUser, Long commentId) {
 
         Comment toComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"댓글을 찾을 수 없습니다."));
+                .orElseThrow(() ->  new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
         Optional<CommentLikes> existingLiked = commentLikeRepository.findByFromUserAndToComment(fromUser,toComment);
 
