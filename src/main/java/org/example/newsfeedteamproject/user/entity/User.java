@@ -97,4 +97,11 @@ public class User extends BaseEntity{
     public void decreaseFollowing() {
         this.following = Math.max(0, this.following - 1);
     }
+
+    public void setFollowCountByListSize(int followerCount, int followingCount) {
+        this.follow = followerCount;
+        this.following = followingCount;
+    }
+
+
 }
