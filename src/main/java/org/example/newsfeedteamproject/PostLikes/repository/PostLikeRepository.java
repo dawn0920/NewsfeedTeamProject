@@ -2,7 +2,6 @@ package org.example.newsfeedteamproject.PostLikes.repository;
 
 import org.example.newsfeedteamproject.PostLikes.entity.PostLikes;
 import org.example.newsfeedteamproject.post.entity.Post;
-import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PostLikeReopsitory extends JpaRepository<PostLikes, Long> {
+public interface PostLikeRepository extends JpaRepository<PostLikes, Long> {
 
     // 좋아요 여부
     // boolean existsByFromUserAndToPost(User fromUser, Post toPost);
