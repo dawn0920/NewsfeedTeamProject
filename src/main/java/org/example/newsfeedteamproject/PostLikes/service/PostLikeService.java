@@ -3,7 +3,7 @@ package org.example.newsfeedteamproject.PostLikes.service;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.PostLikes.dto.PostLikeResponseDto;
 import org.example.newsfeedteamproject.PostLikes.entity.PostLikes;
-import org.example.newsfeedteamproject.PostLikes.repository.PostLikeReopsitory;
+import org.example.newsfeedteamproject.PostLikes.repository.PostLikeRepository;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.post.repository.PostRepository;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostLikeService {
-    private final PostLikeReopsitory postLikeReopsitory;
+    private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
@@ -30,25 +30,25 @@ public class PostLikeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
 
         // 이미 눌려있는지 확인
-        Optional<PostLikes> existiongLiked = postLikeReopsitory.findByFromUserAndToPost(fromUser, toPost);
+        Optional<PostLikes> existiongLiked = postLikeRepository.findByFromUserAndToPost(fromUser, toPost);
 
         if (existiongLiked.isPresent()) {
             // 좋아요가 되어있으면 취소
-            postLikeReopsitory.delete(existiongLiked.get());
+            postLikeRepository.delete(existiongLiked.get());
 
             toPost.decreaseLike();
             postRepository.save(toPost);
 
-            int currentLikeCount = postLikeReopsitory.countByToPost(toPost);
+            int currentLikeCount = postLikeRepository.countByToPost(toPost);
             return new PostLikeResponseDto(false, currentLikeCount);
         } else {
             // 좋아요
-            postLikeReopsitory.save(new PostLikes(fromUser, toPost));
+            postLikeRepository.save(new PostLikes(fromUser, toPost));
 
             toPost.increaseLike();
             postRepository.save(toPost);
 
-            int currentLikeCount = postLikeReopsitory.countByToPost(toPost);
+            int currentLikeCount = postLikeRepository.countByToPost(toPost);
             return new PostLikeResponseDto(true, currentLikeCount);
         }
     }
