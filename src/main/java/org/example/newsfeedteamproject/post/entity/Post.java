@@ -67,7 +67,7 @@ public class Post extends BaseEntity {
     /**
      * 좋아요 연관관계
      */
-    @OneToMany(mappedBy = "toPost")
+    @OneToMany(mappedBy = "toPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<PostLikes> postLikes = new ArrayList<>();
 
     /**
@@ -77,6 +77,11 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
+    /**
+     *
+     * @param user
+     * @param dto
+     */
     public Post(User user, PostRequestDto dto){
         this.user = user;
         this.contents = dto.getContents();
@@ -85,6 +90,10 @@ public class Post extends BaseEntity {
         this.mention= dto.getMention();
     }
 
+    /**
+     *
+     * @param dto
+     */
     public void update(PostRequestDto dto){
         this.contents = dto.getContents();
         this.img = dto.getImg();

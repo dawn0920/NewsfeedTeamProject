@@ -3,10 +3,15 @@ package org.example.newsfeedteamproject.comment.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.newsfeedteamproject.PostLikes.entity.PostLikes;
 import org.example.newsfeedteamproject.base_entity.BaseEntity;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
+import org.example.newsfeedteamproject.commentLikes.entity.CommentLikes;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.example.newsfeedteamproject.user.entity.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,6 +35,12 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    /**
+     * 좋아요 연관관계
+     */
+    @OneToMany(mappedBy = "toComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<CommentLikes> commentLikes = new ArrayList<>();
 
     public Comment(Post post, User user, String contents) {
         this.post = post;
