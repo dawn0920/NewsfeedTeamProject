@@ -1,6 +1,8 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.global.error.CustomException;
+import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.dto.*;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
@@ -85,12 +87,12 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dose not exist id = " + userId)
+                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
         );
 
         // isWithdrawn 값이 true 이면 탈퇴된 계정이므로 예외처리
         if(user.isWithdrawn()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
         }
         return new UserResponseDto(user);
     }
@@ -118,16 +120,16 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dose not exist id = " + userId)
+                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
                 );
         // isWithdrawn 값이 true 이면 탈퇴된 계정이므로 예외처리
         if(user.isWithdrawn()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
         }
 
         // 패스워드 본인 인증
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+            throw new CustomException(ExceptionCode.PASSWORD_NOT_FOUND);
         }
 
         /**
@@ -165,12 +167,12 @@ public class UserService {
         // 받아온 userId에 대한 user 객체 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dose not exist id = " + userId)
+                        () -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE)
                 );
 
         // 패스워드 본인 인증
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+            throw new CustomException(ExceptionCode.PASSWORD_NOT_FOUND);
         }
 
         user.withdrawn(requestDto.isWithdrawn());
@@ -187,16 +189,16 @@ public class UserService {
 
         // 요청한 이메일이 DB에 있는지 찾고 있으면 user 객체로 생성
         User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "해당 이메일은 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
 
         // 패스워드 본인 인증
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다.");
+            throw new CustomException(ExceptionCode.PASSWORD_NOT_FOUND);
         }
 
         // 탈퇴된 계정 로그인 불가
         if(user.isWithdrawn()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
         }
 
         return user.getId();
