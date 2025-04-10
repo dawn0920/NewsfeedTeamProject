@@ -4,6 +4,7 @@ import org.example.newsfeedteamproject.comment.entity.Comment;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return
      */
 
-    Page<Comment> findByPostId(Long postId, Pageable pageable);
+    Slice<Comment> findByPostId(Long postId, Pageable pageable);
 
     /**
      * User_ID로 특정 유저의 댓글을 찾아주는 메소드입니다.
@@ -28,12 +29,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return
      */
 
-    Page<Comment> findByUserId(Long userId, Pageable pageable);
+    Slice<Comment> findByUserId(Long userId, Pageable pageable);
 
     /**
-     * 포스트 아이디로 코멘트 조회
+     * 특정 코멘트 아이디를 유저 정보와 포스트 정보를 함께 뽑아주고 있습니다. 이때 조건은 포스트 id와 코멘트 id입니다.
      * @param postId
-     * @param pageable
      * @return
      */
 

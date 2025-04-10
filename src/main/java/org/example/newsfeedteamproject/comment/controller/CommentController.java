@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/comment")
 
 public class CommentController {
 
@@ -30,62 +31,52 @@ public class CommentController {
      * @return
      */
 
-    @PostMapping("/posts/{postId}/comments")
+    @PostMapping("/posts/{postId}")
     public ResponseEntity<CommentResponseDto> postComment
-    (@SessionAttribute(name = "LOGIN_USER") Long userId,
+    (@SessionAttribute(name = Const.LOGIN_USER) Long userId,
      @PathVariable Long postId,
      @Valid @RequestBody CommentRequestDto requestDto) {
         return new ResponseEntity<>(commentService.addComment(userId, postId, requestDto),HttpStatus.CREATED);
     }
 
     /**
-     * 특정 포스트에 달린 댓글을 보여줍니다.
-     * @param postId
-     * @return
-     */
-
-    @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<List<CommentResponseDto>> findByComment(@PathVariable Long postId) {
-        return ResponseEntity.ok(commentService.findByComment(postId));
-    }
-
-    /**
-     * 특정 포스트에 달린 댓글을 페이징해서 보여줍니다.
+     * 특정 포스트를 클릭하면 스크롤 방식으로 댓글을 보여줍니다.
      * @param postId
      * @param pageable
      * @return
      */
 
-    @GetMapping("/posts/{postId}/comments/page")
-    public ResponseEntity<Page<CommentResponseDto>> getPostPage
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<Slice<CommentResponseDto>> getCommentPageByPost
     (@PathVariable Long postId,
-     @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC) Pageable pageable) {
+     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
         return new ResponseEntity<>(commentService.getCommentsByPost(postId, pageable), HttpStatus.OK);
     }
 
     /**
-     * 유저 관련 페이지에서 유저가 작성한 댓글을 페이징해서 보여줍니다. 이 접근은 누구나 할 수 있습니다.
+     * 특정 유저를 클릭하면 그 유저가 작성한 댓글을 스크롤 방식으로 보여줍니다.
      * @param userId
+     * @param pageable
      * @return
      */
 
-    @GetMapping("/users/information/{userId}/comment")
-    public ResponseEntity<Page<CommentResponseDto>> getCommentPage
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<Slice<CommentResponseDto>> getCommentPage
     (@PathVariable Long userId,
-     @PageableDefault(size = 10, sort = "creatTime", direction = Sort.Direction.DESC) Pageable pageable) {
+     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
         return new ResponseEntity<>(commentService.getCommentsByUserId(userId, pageable), HttpStatus.OK);
     }
 
     /**
-     * 특정 게시글에 달린 댓글을 수정합니다.
+     * 특정 게시글에 달린 댓글을 수정합니다. 이때 수정에는 권한이 필요합니다.
      * @param userId
      * @param commentId
      * @param requestDto
      * @return
      */
-    @PutMapping("posts/{postId}/comment/{commentId}")
+    @PutMapping("posts/{postId}/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
-            @SessionAttribute(name = "LOGIN_USER") Long userId,
+            @SessionAttribute(name = Const.LOGIN_USER)  Long userId,
             @PathVariable Long commentId,
             @PathVariable Long postId,
             @Valid @RequestBody CommentRequestDto requestDto
@@ -100,9 +91,9 @@ public class CommentController {
      * @return
      */
 
-    @DeleteMapping("posts/{postId}/comment/{commentId}")
+    @DeleteMapping("posts/{postId}/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @SessionAttribute(name = "LOGIN_USER") Long userId,
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @PathVariable Long commentId,
             @PathVariable Long postId
     ) {

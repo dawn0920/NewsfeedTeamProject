@@ -14,6 +14,7 @@ import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,22 +37,25 @@ public class CommentService {
      */
 
     @Transactional
-    public CommentResponseDto addComment(Long userId, Long postId, CommentRequestDto requestDto) {
+    public CommentResponseDto addComment(Long userId,Long postId, CommentRequestDto requestDto) {
+
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.FIND_NOT_INTERFACE));
+
         Comment comment = CommentFactory.saveComment(post, user, requestDto);
         return new CommentResponseDto(commentRepository.save(comment));
     }
 
     /**
-     * 특정 포스트에 달린 댓글을 페이징해서 보여줍니다.
+     * 특정 포스트를 클릭하면 스크롤 방식으로 댓글을 보여줍니다.
      * @param postId
+     * @param pageable
      * @return
      */
-
     @Transactional(readOnly = true)
-    public Page<CommentResponseDto> getCommentsByPost(Long postId, Pageable pageable) {
-        Page<Comment> comments = commentRepository.findByPostId(postId, pageable);
+    public Slice<CommentResponseDto> getCommentsByPost(Long postId, Pageable pageable) {
+        Slice<Comment> comments = commentRepository.findByPostId(postId, pageable);
 
         if(comments == null) {
             throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
@@ -61,16 +65,16 @@ public class CommentService {
     }
 
     /**
-     * 유저 관련 페이지에서 유저가 작성한 댓글을 조회하는 메소드입니다. 이 조회는 누구나 할 수 있습니다.
+     * 특정 유저를 클릭하면 그 유저가 작성한 댓글을 스크롤 방식으로 보여줍니다.
      * @param userId
      * @param pageable
      * @return
      */
 
     @Transactional(readOnly = true)
-    public Page<CommentResponseDto> getCommentsByUserId(Long userId, Pageable pageable) {
+    public Slice<CommentResponseDto> getCommentsByUserId(Long userId, Pageable pageable) {
 
-        Page<Comment> comments = commentRepository.findByUserId(userId, pageable);
+        Slice<Comment> comments = commentRepository.findByUserId(userId, pageable);
 
         if(comments == null) {
             throw new CustomException(ExceptionCode.FIND_NOT_INTERFACE);
@@ -119,11 +123,5 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommentResponseDto> findByComment(Long postId) {
-        List<Comment> comments = commentRepository.findByPostId(postId);
-        return  comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 }
