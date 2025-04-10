@@ -5,6 +5,7 @@ import org.example.newsfeedteamproject.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 특정 사용자의 팔로우 관계 조회
     Optional<Follow> findByFromUserAndToUser(User fromUser, User toUser);
 
+    List<Follow> findAllByFromUser(User user);
+
+    List<Follow> findAllByToUser(User user);
 }

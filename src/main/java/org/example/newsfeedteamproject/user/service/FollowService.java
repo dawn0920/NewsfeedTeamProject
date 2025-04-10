@@ -1,6 +1,8 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedteamproject.user.dto.FollowDto;
+import org.example.newsfeedteamproject.user.dto.FollowListReponseDto;
 import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
 import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor // 클래스 내 final 혹은 @NonNull 이 붙은 필드만 포함하는 생성자
@@ -61,6 +65,34 @@ public class FollowService {
             int currentFollowCount = followRepository.countByToUser(toUser);
             return new FollowResponseDto(true, currentFollowCount); // true = 팔로우 상태
         }
+    }
+
+    public List<FollowDto> getFollowings(Long userId) {
+        // userId 찾기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
+
+       List<Follow> followingsInfo = followRepository.findAllByFromUser(user);
+
+        List<FollowDto> followings = followingsInfo.stream()
+                .map(f -> new FollowDto(f.getToUser()))
+                .collect(Collectors.toList());
+
+        return followings;
+    }
+
+    public List<FollowDto> getFollower(Long userId) {
+        // userId 찾기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
+
+        List<Follow> followerInfo = followRepository.findAllByToUser(user);
+
+        List<FollowDto> followers = followerInfo.stream()
+                .map(f -> new FollowDto(f.getToUser()))
+                .collect(Collectors.toList());
+
+        return followers;
     }
 
 }
