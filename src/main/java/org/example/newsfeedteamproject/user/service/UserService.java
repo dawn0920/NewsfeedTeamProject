@@ -2,7 +2,9 @@ package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.user.dto.*;
+import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
+import org.example.newsfeedteamproject.user.repository.FollowRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
     //사진 업로드 경로 지정
     @Value("${file.upload-dir}")
@@ -92,6 +96,27 @@ public class UserService {
         if(user.isWithdrawn()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 계정이 존재하지 않습니다.");
         }
+
+        // follow 정보를 새로고침
+        List<Follow> followingsInfo = followRepository.findAllByFromUser(user);
+        List<Follow> followerInfo = followRepository.findAllByToUser(user);
+
+        // 조건 검색
+        int followings = (int) followingsInfo.stream()
+                .filter(f -> !f.getToUser().isWithdrawn())
+                .count();
+
+        int followers = (int) followerInfo.stream()
+                .filter(f -> !f.getFromUser().isWithdrawn())
+                .count();
+
+        // 유저 정보에 반영
+        user.setFollowCountByListSize(followers, followings);
+
+        // 유저 정보 저장
+        userRepository.save(user);
+
+
         return new UserResponseDto(user);
     }
 

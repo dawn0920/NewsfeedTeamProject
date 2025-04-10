@@ -67,6 +67,7 @@ public class FollowService {
         }
     }
 
+    // 팔로잉 리스트
     public List<FollowDto> getFollowings(Long userId) {
         // userId 찾기
         User user = userRepository.findById(userId)
@@ -75,12 +76,14 @@ public class FollowService {
        List<Follow> followingsInfo = followRepository.findAllByFromUser(user);
 
         List<FollowDto> followings = followingsInfo.stream()
+                .filter(f -> !f.getToUser().isWithdrawn())
                 .map(f -> new FollowDto(f.getToUser()))
                 .collect(Collectors.toList());
 
         return followings;
     }
 
+    // 팔로워 리스트
     public List<FollowDto> getFollower(Long userId) {
         // userId 찾기
         User user = userRepository.findById(userId)
@@ -89,7 +92,8 @@ public class FollowService {
         List<Follow> followerInfo = followRepository.findAllByToUser(user);
 
         List<FollowDto> followers = followerInfo.stream()
-                .map(f -> new FollowDto(f.getToUser()))
+                .filter(f -> !f.getFromUser().isWithdrawn())
+                .map(f -> new FollowDto(f.getFromUser()))
                 .collect(Collectors.toList());
 
         return followers;
