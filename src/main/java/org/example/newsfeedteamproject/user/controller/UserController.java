@@ -1,21 +1,14 @@
 package org.example.newsfeedteamproject.user.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.user.dto.UserRequestDto;
 import org.example.newsfeedteamproject.user.dto.UserResponseDto;
 import org.example.newsfeedteamproject.user.dto.*;
-import org.example.newsfeedteamproject.user.entity.User;
-import org.example.newsfeedteamproject.user.repository.FollowRepository;
-import org.example.newsfeedteamproject.user.repository.UserRepository;
-import org.example.newsfeedteamproject.user.service.FollowService;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +22,7 @@ public class UserController {
 
     /**
      * 회원가입 API
-     * @param requestDto 요청 회원 정보
+     * @param requestDto 가입할 회원 정보
      * @return
      */
     @PostMapping("/signup")
@@ -37,20 +30,20 @@ public class UserController {
             @Validated @ModelAttribute UserRequestDto requestDto
     ) throws IOException {
 
-        UserResponseDto userResponseDto = userService.signUp(requestDto);
+        UserResponseDto userResponseDto = userService.UserSignUp(requestDto);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
     /**
      * 회원 선택 조회 API
-     * @param id
+     * @param userId
      * @return
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id){
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> UserFindById(@PathVariable Long userId){
 
-        UserResponseDto userResponseDto = userService.findById(id);
+        UserResponseDto userResponseDto = userService.UserFindById(userId);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
@@ -60,26 +53,26 @@ public class UserController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> findAll(){
+    public ResponseEntity<List<UserResponseDto>> UserFindAll(){
 
-        List<UserResponseDto> userResponseDtoList = userService.findAll();
+        List<UserResponseDto> userResponseDtoList = userService.UserFindAll();
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
     }
 
     /**
      * 회원 수정 API
-     * @param id
+     * @param userId
      * @param requestDto 수정 데이터
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(
-            @PathVariable Long id,
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> UserUpdate(
+            @PathVariable Long userId,
             @Validated @RequestBody UserUpdateRequestDto requestDto
     ){
 
-        userService.update(id, requestDto);
+        userService.UserUpdate(userId, requestDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -87,16 +80,16 @@ public class UserController {
 
     /**
      * 회원 탈퇴 API
-     * @param id
+     * @param userId
      * @param requestDto
      * @return
      */
-    @PatchMapping("/{id}")
-    public ResponseEntity<IsWithdrawnResponseDto> withdrawn(
-            @PathVariable Long id,
+    @PatchMapping("/{userId}")
+    public ResponseEntity<IsWithdrawnResponseDto> UserWithdrawn(
+            @PathVariable Long userId,
             @Validated @RequestBody IsWithdrawnRequestDto requestDto){
 
-        IsWithdrawnResponseDto isWithdrawnResponseDto = userService.withdrawn(id, requestDto);
+        IsWithdrawnResponseDto isWithdrawnResponseDto = userService.UserWithdrawn(userId, requestDto);
 
         return new ResponseEntity<>(isWithdrawnResponseDto, HttpStatus.OK);
     }

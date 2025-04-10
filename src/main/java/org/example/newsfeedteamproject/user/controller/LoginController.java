@@ -28,8 +28,10 @@ public class LoginController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Validated @RequestBody LoginRequestDto requestDto, HttpServletRequest request){
-
+    public ResponseEntity<Void> login(
+            @Validated @RequestBody LoginRequestDto requestDto,
+            HttpServletRequest request
+    ){
         Long userId = userService.login(requestDto);
         HttpSession session = request.getSession();
         session.setAttribute("LOGIN_USER", userId);
