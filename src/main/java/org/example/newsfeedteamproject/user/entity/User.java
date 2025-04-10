@@ -48,24 +48,25 @@ public class User extends BaseEntity{
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0" )
     private boolean withdrawn;
 
+    @Column(nullable = true)
+    private String fileName;
 
-//    @Column(nullable = true)
-//    private String fileName;
-//
-//    @Column(nullable = true)
-//    private String filePath;
+    @Column(nullable = true)
+    private String filePath;
 
 
     public User() {
     }
 
-    public User(String email, String password, String userRefId, String name, String birthday, String phone) {
+    public User(String email, String password, String userRefId, String name, String birthday, String phone, String fileName, String filePath) {
         this.email = email;
         this.password = password;
         this.userRefId = userRefId;
         this.name = name;
         this.birthday = birthday;
         this.phone = phone;
+        this.fileName = fileName;
+        this.filePath = filePath;
     }
 
 

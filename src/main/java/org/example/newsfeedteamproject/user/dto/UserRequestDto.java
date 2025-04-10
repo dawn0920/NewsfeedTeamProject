@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class UserRequestDto {
@@ -27,12 +28,15 @@ public class UserRequestDto {
     @NotBlank(message = "전화번호를 입력해주세요")
     private final String phone;
 
-    public UserRequestDto(String email, String password, String userRefId, String name, String birthday, String phone) {
+    private final MultipartFile file;
+
+    public UserRequestDto(String email, String password, String userRefId, String name, String birthday, String phone, MultipartFile file) {
         this.email = email;
         this.password = password;
         this.userRefId = userRefId;
         this.name = name;
         this.birthday = birthday;
         this.phone = phone;
+        this.file = file;
     }
 }
