@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
  * 게시글(Post) 엔티티에 대한 데이터 접근을 처리하는 JPA 리포지토리입니다.

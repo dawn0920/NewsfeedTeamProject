@@ -58,7 +58,7 @@ public class PostServiceImpl implements PostService {
      * 특정 게시글을 조회합니다.
      *
      * @param postId 조회할 게시글의 ID
-     * @param userId
+     * @param userId 조회할 게시글을 작성한 사용자 Id
      * @return 게시글 응답 DTO
      */
     @Override
