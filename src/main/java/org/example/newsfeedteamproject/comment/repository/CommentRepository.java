@@ -42,4 +42,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // comment의 like 개수를 리스트로 받음
     int countByToComment(Comment comment);
+
+    // post의 comment의 개수를 받음
+    int countByPost(Post post);
 }

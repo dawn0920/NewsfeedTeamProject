@@ -41,6 +41,8 @@ public class PostResponseDto {
 
     private final int postLike;
 
+    private final int commentNum;
+
     /**
      * 게시글 작성자(유저)의 ID
      */
@@ -71,6 +73,7 @@ public class PostResponseDto {
         this.createdAt = post.getCreatTime();
         this.updatedAt = post.getModifiedTime();
         this.postLike = post.getPostLike();
+        this.commentNum = post.getComments().size();
     }
 
     /**
@@ -78,7 +81,7 @@ public class PostResponseDto {
      * @param post 게시글 엔티티 객체
      * @param user 유저 엔티티 객체
      */
-    public PostResponseDto(Post post, User user) {
+    public PostResponseDto(Post post, User user, int commentNum) {
         this.id = post.getId();
         this.contents = post.getContents();
         this.img = post.getImg();
@@ -88,6 +91,20 @@ public class PostResponseDto {
         this.createdAt = post.getCreatTime();
         this.updatedAt = post.getModifiedTime();
         this.postLike = post.getPostLike();
+        this.commentNum = commentNum;
+    }
+
+    public PostResponseDto(Post post, int commentNum) {
+        this.id = post.getId();
+        this.contents = post.getContents();
+        this.img = post.getImg();
+        this.tag = post.getTag();
+        this.mention = post.getMention();
+        this.userId = post.getUser().getId();
+        this.createdAt = post.getCreatTime();
+        this.updatedAt = post.getModifiedTime();
+        this.postLike = post.getPostLike();
+        this.commentNum = commentNum;
     }
 
 }

@@ -27,7 +27,7 @@ public class CommentResponseDto {
         this.creatTime = comment.getCreatTime();
         this.modifiedTime = comment.getModifiedTime();
         this.commentLikes = comment.getCommentLikes();
-        this.likeCount = commentLikes.size();
+        this.likeCount = likes;
     }
 
     public CommentResponseDto(Comment comment) {

@@ -2,6 +2,7 @@ package org.example.newsfeedteamproject.post.service;
 
 import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.comment.entity.Comment;
+import org.example.newsfeedteamproject.comment.repository.CommentRepository;
 import org.example.newsfeedteamproject.global.error.CustomException;
 import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.entity.User;
@@ -30,6 +31,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
 
     /**
@@ -57,7 +59,11 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public Page<PostResponseDto> getAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable).map(PostResponseDto::new);
+        return postRepository.findAll(pageable)
+                .map(post -> {
+                    int commentNum = commentRepository.countByPost(post);
+                    return new PostResponseDto(post, commentNum);
+                });
     }
 
     /**
@@ -71,7 +77,9 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPostById(Long postId, Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        return new PostResponseDto(post,user);
+
+        int commentNum = commentRepository.countByPost(post);
+        return new PostResponseDto(post, user, commentNum);
     }
 
     /**
@@ -128,13 +136,21 @@ public class PostServiceImpl implements PostService {
             throw new CustomException(ExceptionCode.POST_NOT_FOUND);
         }
 
-        return posts.map(PostResponseDto::new);
+        return posts.map(post -> {
+            int commentNum = commentRepository.countByPost(post);
+            return new PostResponseDto(post, commentNum);
+        });
     }
 
     @Override
     public List<PostResponseDto> getAllPostList() {
        List<Post> posts = postRepository.findAll();
-        return posts.stream().map(PostResponseDto::new).collect(Collectors.toList());
+        return posts.stream()
+                .map(post -> {
+                    int commentNum = commentRepository.countByPost(post);
+                    return new PostResponseDto(post, commentNum);
+                })
+                .collect(Collectors.toList());
     }
 }
 
