@@ -6,6 +6,7 @@ import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.comment.entity.Comment;
 import org.example.newsfeedteamproject.comment.entity.CommentFactory;
 import org.example.newsfeedteamproject.comment.repository.CommentRepository;
+import org.example.newsfeedteamproject.commentLikes.entity.CommentLikes;
 import org.example.newsfeedteamproject.global.error.CustomException;
 import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.post.entity.Post;
@@ -60,7 +61,11 @@ public class CommentService {
         if(comments.isEmpty()) {
             throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
-        return comments.map(CommentResponseDto::new);
+        // return comments.map(CommentResponseDto::new);
+        return comments.map(comment -> {
+            int likes = commentRepository.countByToComment(comment);
+            return new CommentResponseDto(comment, likes);
+        });
     }
 
     /**
@@ -79,7 +84,11 @@ public class CommentService {
             throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
 
-        return comments.map(CommentResponseDto::new);
+        // return comments.map(CommentResponseDto::new);
+        return comments.map(comment -> {
+            int likes = commentRepository.countByToComment(comment);
+            return new CommentResponseDto(comment, likes);
+        });
     }
 
     /**
@@ -129,6 +138,11 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getAllCommentService() {
         List<Comment> comments = commentRepository.findAll();
-        return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
+        return comments.stream()
+                .map(comment -> {
+                    int likes = commentRepository.countByToComment(comment);
+                    return new CommentResponseDto(comment, likes);
+                })
+                .collect(Collectors.toList());
     }
 }

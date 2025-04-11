@@ -1,6 +1,7 @@
 package org.example.newsfeedteamproject.comment.repository;
 
 import org.example.newsfeedteamproject.comment.entity.Comment;
+import org.example.newsfeedteamproject.commentLikes.entity.CommentLikes;
 import org.example.newsfeedteamproject.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,4 +40,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPostId(Long postId);
 
+    // comment의 like 개수를 리스트로 받음
+    int countByToComment(Comment comment);
 }
