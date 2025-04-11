@@ -47,15 +47,15 @@ public class LoginController {
         return ResponseEntity.ok(jwtToken);
     }
 
-//    /**
-//     * 로그아웃
-//     * @param request 세션 삭제
-//     * @return
-//     */
-//
-//    @PostMapping("/logout")
-//    public ResponseEntity<String>  logout(@RequestBody @Valid LogOutDto logOutDto){
-//        userService.logOut(logOutDto.getAccessToken(), logOutDto.getEmail());
-//        return ResponseEntity.ok("로그아웃 완료");
-//    }
+    /**
+     * 로그아웃
+     * @param request 세션 삭제
+     * @return
+     */
+
+    @PostMapping("/logout")
+    public ResponseEntity<String>  logout(@RequestBody @Validated LogOutDto logOutDto){
+        userService.logOut(logOutDto.getAccessToken(), logOutDto.getEmail());
+        return ResponseEntity.ok("로그아웃 완료");
+    }
 }

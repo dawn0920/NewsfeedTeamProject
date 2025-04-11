@@ -35,8 +35,9 @@ public class CommentLikeController {
     @PostMapping("/{commentId}/like")
     public CommentLikeResponseDto toggleLike(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal(expression = "username") String email
     ){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         User fromUser = userRepository.findById(userId)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"사용자를 찾을 수 없습니다."));

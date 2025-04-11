@@ -77,8 +77,11 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long postId,
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal(expression = "username") String email,
             @RequestBody PostRequestDto requestDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
         Long userId = user.getId();
         PostResponseDto updatedPost = postService.updatePost(postId, requestDto, userId);
         return ResponseEntity.ok(updatedPost);
@@ -92,8 +95,13 @@ public class PostController {
      * @return HTTP 204 No Content 응답
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal(expression = "username")String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
         Long userId = user.getId();
+
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
     }
@@ -108,9 +116,12 @@ public class PostController {
 
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentResponseDto> postComment
-    (@AuthenticationPrincipal User user,
+    (@AuthenticationPrincipal(expression = "username")String email,
      @PathVariable Long postId,
      @Valid @RequestBody CommentRequestDto requestDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
         Long userId = user.getId();
         return new ResponseEntity<>(commentService.addComment(userId, postId, requestDto),HttpStatus.CREATED);
     }

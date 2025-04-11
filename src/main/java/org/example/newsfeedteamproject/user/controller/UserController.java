@@ -10,6 +10,7 @@ import org.example.newsfeedteamproject.user.dto.isWithDrawDto.IsWithdrawnRespons
 import org.example.newsfeedteamproject.user.dto.userDto.UserResponseDto;
 import org.example.newsfeedteamproject.user.dto.userDto.UserUpdateRequestDto;
 import org.example.newsfeedteamproject.user.entity.User;
+import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -30,6 +33,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final CommentService commentService;
+    private final UserRepository userRepository;
 
     /**
      * 특정 유저를 조회할 수 있습니다.
@@ -38,7 +42,8 @@ public class UserController {
      */
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> UserFindById(@AuthenticationPrincipal User user){
+    public ResponseEntity<UserResponseDto> UserFindById(@AuthenticationPrincipal(expression = "username") String email) throws IOException {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         UserResponseDto userResponseDto = userService.UserFindById(userId);
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
@@ -52,8 +57,9 @@ public class UserController {
      */
     @PutMapping("/{userId}")
     public ResponseEntity<Void> UserUpdate(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal(expression = "username") String email,
             @Validated @RequestBody UserUpdateRequestDto requestDto) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         userService.UserUpdate(userId, requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -68,8 +74,9 @@ public class UserController {
      */
     @PatchMapping("/{userId}")
     public ResponseEntity<IsWithdrawnResponseDto> UserWithdrawn(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal(expression = "username") String email,
             @Validated @RequestBody IsWithdrawnRequestDto requestDto){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         IsWithdrawnResponseDto isWithdrawnResponseDto = userService.UserWithdrawn(userId, requestDto);
         return new ResponseEntity<>(isWithdrawnResponseDto, HttpStatus.OK);
@@ -83,8 +90,9 @@ public class UserController {
      */
     @GetMapping("/{userId}/posts")
     public ResponseEntity<Slice<PostResponseDto>> getPostById(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal(expression = "username") String email,
             @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         return new ResponseEntity<>(postService.getPostByUserId(userId, pageable), HttpStatus.OK);
     }
@@ -98,8 +106,9 @@ public class UserController {
 
     @GetMapping("/{userId}/comments")
     public ResponseEntity<Slice<CommentResponseDto>> getCommentPage
-    (@AuthenticationPrincipal User user,
+    (@AuthenticationPrincipal(expression = "username") String email,
      @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         return new ResponseEntity<>(commentService.getCommentsByUserId(userId, pageable), HttpStatus.OK);
     }

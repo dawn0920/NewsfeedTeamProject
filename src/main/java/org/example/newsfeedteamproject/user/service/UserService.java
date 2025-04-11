@@ -18,12 +18,16 @@ import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.FollowRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.example.newsfeedteamproject.global.common.cofing.CacheNames;
+import org.springframework.cache.annotation.Cacheable;
+import org.example.newsfeedteamproject.global.common.cofing.RedisDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +44,7 @@ public class UserService {
     private final FollowRepository followRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RedisDao redisDao;
 
     //사진 업로드 경로 지정
     @Value("${file.upload-dir}")
@@ -195,30 +200,34 @@ public class UserService {
      * @return
      */
 
+    @Cacheable(cacheNames = CacheNames.LOGINUSER, key = "'login'+ #p0.getEmail()", unless = "#result== null")
     @jakarta.transaction.Transactional
     public JwtToken login(LoginRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return jwtTokenProvider.generateToken(authentication);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+        Long refreshTokenTTL = jwtTokenProvider.getExpiration(jwtToken.getRefreshToken());
+        redisDao.setRefreshToken(requestDto.getEmail(), jwtToken.getRefreshToken(), refreshTokenTTL);
+        return jwtToken;
     }
 
-//    /**
-//     * 로그아웃기능
-//     * @param requestDto
-//     * @return
-//     */
-//
-//    @Transactional
-//    public void logOut(String accessToken, String email) {
-//
-//        Long expiration = jwtTokenProvider.getExpiration(accessToken);
-//        redisDao.setBlackList(accessToken, "logout", expiration);
-//
-//        if(redisDao.hasKey(email)) {
-//            redisDao.deleteRefreshToken(email);
-//        } else {
-//            throw new IllegalArgumentException("이미 로그아웃한 유저입니다.");
-//        }
-//    }
+    /**
+     * 로그아웃기능
+     * @param requestDto
+     * @return
+     */
 
+    @CacheEvict(cacheNames = CacheNames.LOGINUSER, key = "'login'+#p1")
+    @Transactional
+    public void logOut(String accessToken, String email) {
+
+        Long expiration = jwtTokenProvider.getExpiration(accessToken);
+        redisDao.setBlackList(accessToken, "logout", expiration);
+
+        if (redisDao.hasKey(email)) {
+            redisDao.deleteRefreshToken(email);
+        } else {
+            throw new IllegalArgumentException("이미 로그아웃한 유저입니다.");
+        }
+    }
 }

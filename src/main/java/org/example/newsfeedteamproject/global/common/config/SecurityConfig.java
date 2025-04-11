@@ -2,9 +2,13 @@ package org.example.newsfeedteamproject.global.common.cofing;
 
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.global.common.jwt.JwtAuthenticationFilter;
+import org.example.newsfeedteamproject.global.common.jwt.JwtToken;
 import org.example.newsfeedteamproject.global.common.jwt.JwtTokenProvider;
+import org.example.newsfeedteamproject.user.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,9 +35,12 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/signup", "/users/login").permitAll()
+                        .requestMatchers("/users/signup").permitAll()
+                        .requestMatchers("/users/login").permitAll()
+                        .requestMatchers("/users/logout").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

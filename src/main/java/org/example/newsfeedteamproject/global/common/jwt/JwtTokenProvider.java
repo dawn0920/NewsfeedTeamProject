@@ -15,6 +15,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -49,7 +50,8 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
 
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 600_000);
+        Date refreshTokenExpiresIn = new Date(now + 3_600_000);
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -59,7 +61,8 @@ public class JwtTokenProvider {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setSubject(authentication.getName())
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -131,5 +134,11 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public Long getExpiration(String accessToken) {
+        Claims claims = parseClaims(accessToken);
+        Date expiration = claims.getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
     }
 }
