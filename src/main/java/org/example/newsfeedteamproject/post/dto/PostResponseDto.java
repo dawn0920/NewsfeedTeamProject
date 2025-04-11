@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 public class PostResponseDto {
 
-
     /**
      * 게시글 ID
      */

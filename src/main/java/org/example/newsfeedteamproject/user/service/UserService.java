@@ -1,32 +1,45 @@
 package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.newsfeedteamproject.global.common.jwt.JwtToken;
+import org.example.newsfeedteamproject.global.common.jwt.JwtTokenProvider;
 import org.example.newsfeedteamproject.global.error.CustomException;
 import org.example.newsfeedteamproject.global.error.ExceptionCode;
-import org.example.newsfeedteamproject.user.dto.*;
+import org.example.newsfeedteamproject.user.dto.isWithDrawDto.IsWithdrawnRequestDto;
+import org.example.newsfeedteamproject.user.dto.isWithDrawDto.IsWithdrawnResponseDto;
+import org.example.newsfeedteamproject.user.dto.userDto.UserResponseDto;
+import org.example.newsfeedteamproject.user.dto.userDto.UserUpdateRequestDto;
+import org.example.newsfeedteamproject.user.dto.userRegistration.LoginRequestDto;
+import org.example.newsfeedteamproject.user.dto.userRegistration.ResponseSignUpDto;
+import org.example.newsfeedteamproject.user.dto.userRegistration.SignUpDto;
 import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.FollowRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     //사진 업로드 경로 지정
     @Value("${file.upload-dir}")
@@ -38,47 +51,18 @@ public class UserService {
      * @return
      * @throws IOException transferTo에 대한 예외 처리
      */
+
     @Transactional
-    public UserResponseDto UserSignUp(UserRequestDto requestDto) throws IOException {
+    public ResponseSignUpDto signUpService(SignUpDto requestDto) {
 
-        // 파일명
-        String originalFilename = requestDto.getFile().getOriginalFilename();
-        // 파일 저장 경로
-        String filePath = uploadDir + File.separator + originalFilename;
-
-        // 폴더 없으면 생성
-        File dir = new File(uploadDir);
-        if (!dir.exists()) {
-            boolean created = dir.mkdirs();
-            System.out.println("업로드 폴더 생성 여부: " + created);
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
+            throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
 
-        // 파일 경로 객체 생성
-        File dest = new File(filePath);
-        /**
-         * requestDto.getFile()로 사용자가 업로드한 MultipartFile을 가져오고
-         * transferTo(dest)로 업로드된 임시 파일을 dest 경로에 복사(또는 이동)
-         */
-        requestDto.getFile().transferTo(dest);
-
-        // 패스워드 엔코더
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-
-        User user = new User(
-                requestDto.getEmail(),
-                encodedPassword,
-                requestDto.getUserRefId(),
-                requestDto.getName(),
-                requestDto.getBirthday(),
-                requestDto.getPhone(),
-                originalFilename,
-                filePath
-        );
-
-        // DB 저장
-        userRepository.save(user);
-
-        return new UserResponseDto(user);
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        return ResponseSignUpDto.toDto(userRepository.save(requestDto.toEntity(encodedPassword, roles)));
     }
 
     /**
@@ -206,27 +190,35 @@ public class UserService {
     }
 
     /**
-     * 로그인
-     * @param requestDto 로그인 정보
+     * 로그인 기능
+     * @param requestDto
      * @return
      */
-    public Long login(LoginRequestDto requestDto) {
 
-        // 요청한 이메일이 DB에 있는지 찾고 있으면 user 객체로 생성
-        User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new CustomException(ExceptionCode.EMAIL_ALREADY_EXISTS));
-
-        // 패스워드 본인 인증
-        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
-            throw new CustomException(ExceptionCode.PASSWORD_NOT_FOUND);
-        }
-
-        // 탈퇴된 계정 로그인 불가
-        if(user.isWithdrawn()){
-            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
-        }
-
-        return user.getId();
+    @jakarta.transaction.Transactional
+    public JwtToken login(LoginRequestDto requestDto) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        return jwtTokenProvider.generateToken(authentication);
     }
+
+//    /**
+//     * 로그아웃기능
+//     * @param requestDto
+//     * @return
+//     */
+//
+//    @Transactional
+//    public void logOut(String accessToken, String email) {
+//
+//        Long expiration = jwtTokenProvider.getExpiration(accessToken);
+//        redisDao.setBlackList(accessToken, "logout", expiration);
+//
+//        if(redisDao.hasKey(email)) {
+//            redisDao.deleteRefreshToken(email);
+//        } else {
+//            throw new IllegalArgumentException("이미 로그아웃한 유저입니다.");
+//        }
+//    }
 
 }

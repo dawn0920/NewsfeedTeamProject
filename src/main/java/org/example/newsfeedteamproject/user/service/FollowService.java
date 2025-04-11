@@ -3,9 +3,8 @@ package org.example.newsfeedteamproject.user.service;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.global.error.CustomException;
 import org.example.newsfeedteamproject.global.error.ExceptionCode;
-import org.example.newsfeedteamproject.user.dto.FollowDto;
-import org.example.newsfeedteamproject.user.dto.FollowListReponseDto;
-import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
+import org.example.newsfeedteamproject.user.dto.followDto.FollowDto;
+import org.example.newsfeedteamproject.user.dto.followDto.FollowResponseDto;
 import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.FollowRepository;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor // 클래스 내 final 혹은 @NonNull 이 붙은 필드만 포함하는 생성자
+
 public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;

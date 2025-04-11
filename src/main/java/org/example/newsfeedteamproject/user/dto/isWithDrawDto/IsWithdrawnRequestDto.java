@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.user.dto.isWithDrawDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

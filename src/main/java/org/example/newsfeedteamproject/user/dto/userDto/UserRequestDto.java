@@ -1,8 +1,7 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.user.dto.userDto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 

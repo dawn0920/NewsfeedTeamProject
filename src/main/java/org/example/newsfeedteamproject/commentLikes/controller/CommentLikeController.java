@@ -3,10 +3,10 @@ package org.example.newsfeedteamproject.commentLikes.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.commentLikes.dto.CommentLikeResponseDto;
 import org.example.newsfeedteamproject.commentLikes.service.CommentLikeService;
-import org.example.newsfeedteamproject.global.consts.Const;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,11 +31,13 @@ public class CommentLikeController {
      * @return {@link CommentLikeResponseDto} 객체로, 성공 여부와 총 좋아요 수를 포함합니다.
      * @throws ResponseStatusException 사용자가 존재하지 않을 경우 404 예외 발생
      */
+
     @PostMapping("/{commentId}/like")
     public CommentLikeResponseDto toggleLike(
             @PathVariable Long commentId,
-            @SessionAttribute(name = Const.LOGIN_USER) Long userId
+            @AuthenticationPrincipal User user
     ){
+        Long userId = user.getId();
         User fromUser = userRepository.findById(userId)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"사용자를 찾을 수 없습니다."));
         return commentLikeService.toggleCommentLike(fromUser, commentId);

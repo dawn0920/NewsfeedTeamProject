@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.user.dto.followDto;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

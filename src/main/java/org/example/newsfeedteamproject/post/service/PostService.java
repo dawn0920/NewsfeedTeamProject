@@ -2,8 +2,12 @@ package org.example.newsfeedteamproject.post.service;
 
 import org.example.newsfeedteamproject.post.dto.PostRequestDto;
 import org.example.newsfeedteamproject.post.dto.PostResponseDto;
+import org.example.newsfeedteamproject.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+
+import java.util.List;
 
 /**
  * 게시글(Post) 관련 서비스 인터페이스
@@ -54,5 +58,7 @@ public interface PostService {
      */
     void deletePost(Long postId, Long userId);
 
-    Page<PostResponseDto> getPostByUserId(Long userId, Pageable pageable);
+    Slice<PostResponseDto> getPostByUserId(Long userId, Pageable pageable);
+
+    List<PostResponseDto> getAllPostList();
 }

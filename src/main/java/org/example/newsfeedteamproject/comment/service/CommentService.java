@@ -57,10 +57,9 @@ public class CommentService {
     public Slice<CommentResponseDto> getCommentsByPost(Long postId, Pageable pageable) {
         Slice<Comment> comments = commentRepository.findByPostId(postId, pageable);
 
-        if(comments == null) {
+        if(comments.isEmpty()) {
             throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
-
         return comments.map(CommentResponseDto::new);
     }
 
@@ -76,7 +75,7 @@ public class CommentService {
 
         Slice<Comment> comments = commentRepository.findByUserId(userId, pageable);
 
-        if(comments == null) {
+        if(comments.isEmpty()) {
             throw new CustomException(ExceptionCode.COMMENT_NOT_FOUND);
         }
 
@@ -92,7 +91,7 @@ public class CommentService {
      */
 
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto requestDto) {
+    public CommentResponseDto updateComment(Long userId, Long commentId, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
@@ -112,16 +111,24 @@ public class CommentService {
      */
 
     @Transactional
-    public void deleteComment(Long commentId, Long userId,Long postId) {
+    public void deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.POST_NOT_FOUND));
         if (!comment.getUser().getId().equals(userId)) {
             throw new CustomException(ExceptionCode.NO_DELETE_PERMISSION);
         }
 
         commentRepository.delete(comment);
+    }
+
+    /**
+     * 댓글 전체 조회
+     */
+
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getAllCommentService() {
+        List<Comment> comments = commentRepository.findAll();
+        return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 }

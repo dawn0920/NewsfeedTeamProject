@@ -5,17 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.comment.dto.CommentRequestDto;
 import org.example.newsfeedteamproject.comment.dto.CommentResponseDto;
 import org.example.newsfeedteamproject.comment.service.CommentService;
-import org.example.newsfeedteamproject.global.consts.Const;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
+import org.example.newsfeedteamproject.user.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,64 +20,21 @@ public class CommentController {
     private final CommentService commentService;
 
     /**
-     * id를 받아서 포스트를 찾아주고, 세션을 받아서 로그인 유무를 확인해준다음 댓글을 등록합니다.
-     * @param userId
-     * @param postId
-     * @param requestDto
-     * @return
-     */
-
-    @PostMapping("/posts/{postId}")
-    public ResponseEntity<CommentResponseDto> postComment
-    (@SessionAttribute(name = Const.LOGIN_USER) Long userId,
-     @PathVariable Long postId,
-     @Valid @RequestBody CommentRequestDto requestDto) {
-        return new ResponseEntity<>(commentService.addComment(userId, postId, requestDto),HttpStatus.CREATED);
-    }
-
-    /**
-     * 특정 포스트를 클릭하면 스크롤 방식으로 댓글을 보여줍니다.
-     * @param postId
-     * @param pageable
-     * @return
-     */
-
-    @GetMapping("/posts/{postId}")
-    public ResponseEntity<Slice<CommentResponseDto>> getCommentPageByPost
-    (@PathVariable Long postId,
-     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
-        return new ResponseEntity<>(commentService.getCommentsByPost(postId, pageable), HttpStatus.OK);
-    }
-
-    /**
-     * 특정 유저를 클릭하면 그 유저가 작성한 댓글을 스크롤 방식으로 보여줍니다.
-     * @param userId
-     * @param pageable
-     * @return
-     */
-
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<Slice<CommentResponseDto>> getCommentPage
-    (@PathVariable Long userId,
-     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
-        return new ResponseEntity<>(commentService.getCommentsByUserId(userId, pageable), HttpStatus.OK);
-    }
-
-    /**
      * 특정 게시글에 달린 댓글을 수정합니다. 이때 수정에는 권한이 필요합니다.
      * @param userId
      * @param commentId
      * @param requestDto
      * @return
      */
-    @PutMapping("posts/{postId}/{commentId}")
+
+    @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
-            @SessionAttribute(name = Const.LOGIN_USER)  Long userId,
+            @AuthenticationPrincipal User user,
             @PathVariable Long commentId,
-            @PathVariable Long postId,
             @Valid @RequestBody CommentRequestDto requestDto
     ) {
-        return new ResponseEntity<>(commentService.updateComment(postId, commentId, requestDto),HttpStatus.OK);
+        Long userId = user.getId();
+        return new ResponseEntity<>(commentService.updateComment(userId, commentId, requestDto),HttpStatus.OK);
     }
 
     /**
@@ -93,13 +44,12 @@ public class CommentController {
      * @return
      */
 
-    @DeleteMapping("posts/{postId}/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
-            @PathVariable Long commentId,
-            @PathVariable Long postId
-    ) {
-        commentService.deleteComment(commentId, userId,postId);
+            @AuthenticationPrincipal User user,
+            @PathVariable Long commentId) {
+        Long userId = user.getId();
+        commentService.deleteComment(userId, commentId);
         return ResponseEntity.ok().build();
     }
 }

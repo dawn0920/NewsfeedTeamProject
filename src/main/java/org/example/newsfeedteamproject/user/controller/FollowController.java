@@ -1,17 +1,14 @@
 package org.example.newsfeedteamproject.user.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeedteamproject.global.consts.Const;
-import org.example.newsfeedteamproject.user.dto.FollowDto;
-import org.example.newsfeedteamproject.user.dto.FollowListReponseDto;
-import org.example.newsfeedteamproject.user.dto.FollowResponseDto;
+import org.example.newsfeedteamproject.user.dto.followDto.FollowDto;
+import org.example.newsfeedteamproject.user.dto.followDto.FollowResponseDto;
 import org.example.newsfeedteamproject.user.entity.User;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.example.newsfeedteamproject.user.service.FollowService;
-import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,8 +25,9 @@ public class FollowController {
     @PostMapping("/{toUserId}/follow")
     public ResponseEntity<FollowResponseDto> toggleFollow(
             @PathVariable Long toUserId,
-            @SessionAttribute(name = Const.LOGIN_USER) Long userId
+            @AuthenticationPrincipal User user
     ) {
+        Long userId = user.getId();
         // userId로 User 객체 조회
         User fromUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
@@ -43,10 +41,6 @@ public class FollowController {
     public ResponseEntity<List<FollowDto>> getFollowing(
             @PathVariable Long userId
     ) {
-        // userId로 User 객체 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-
         List<FollowDto> followings = followService.getFollowings(userId);
         return ResponseEntity.ok(followings);
     }
@@ -56,10 +50,6 @@ public class FollowController {
     public ResponseEntity<List<FollowDto>> getFollower(
             @PathVariable Long userId
     ) {
-        // userId로 User 객체 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-
         List<FollowDto> followers = followService.getFollower(userId);
         return ResponseEntity.ok(followers);
     }

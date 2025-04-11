@@ -1,4 +1,4 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.user.dto.userDto;
 
 import lombok.Getter;
 import org.example.newsfeedteamproject.user.entity.User;

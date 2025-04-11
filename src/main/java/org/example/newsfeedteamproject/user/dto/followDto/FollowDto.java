@@ -1,9 +1,8 @@
-package org.example.newsfeedteamproject.user.dto;
+package org.example.newsfeedteamproject.user.dto.followDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.newsfeedteamproject.user.entity.Follow;
 import org.example.newsfeedteamproject.user.entity.User;
 
 @Getter
