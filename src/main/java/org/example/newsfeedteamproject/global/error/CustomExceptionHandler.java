@@ -33,7 +33,4 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
-
-
 }
