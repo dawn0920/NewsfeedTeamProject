@@ -16,8 +16,8 @@ public class CommentResponseDto {
     private final String contents;
     private final LocalDateTime creatTime;
     private final LocalDateTime modifiedTime;
-    private final List<CommentLikes> commentLikes;
-    private final int likeCount;
+   // private final List<CommentLikes> commentLikes;
+    //private final int likeCount;
 
     public CommentResponseDto(Comment comment, int likes) {
         this.id = comment.getId();
@@ -26,8 +26,8 @@ public class CommentResponseDto {
         this.contents = comment.getContents();
         this.creatTime = comment.getCreatTime();
         this.modifiedTime = comment.getModifiedTime();
-        this.commentLikes = comment.getCommentLikes();
-        this.likeCount = likes;
+      //  this.commentLikes = comment.getCommentLikes();
+        //this.likeCount = likes;
     }
 
     public CommentResponseDto(Comment comment) {
@@ -37,7 +37,7 @@ public class CommentResponseDto {
         this.contents = comment.getContents();
         this.creatTime = comment.getCreatTime();
         this.modifiedTime = comment.getModifiedTime();
-        this.commentLikes = comment.getCommentLikes();
-        this.likeCount = commentLikes.size();
+      //  this.commentLikes = comment.getCommentLikes();
+        //this.likeCount = commentLikes.size();
     }
 }
