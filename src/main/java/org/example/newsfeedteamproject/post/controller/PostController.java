@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 /**
@@ -137,6 +139,16 @@ public class PostController {
     (@PathVariable Long postId,
      @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
         return new ResponseEntity<>(commentService.getCommentsByPost(postId, pageable), HttpStatus.OK);
+    }
+
+    /**
+     * 전체 글 조회
+     */
+    @GetMapping("/posts")
+    public ResponseEntity<Slice<PostResponseDto>> getAllPosts(
+            @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+        Slice<PostResponseDto> posts = postService.getAllPostList(pageable);
+        return ResponseEntity.ok(posts);
     }
 
 }
