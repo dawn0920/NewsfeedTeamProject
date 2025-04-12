@@ -144,7 +144,7 @@ public class PostController {
     /**
      * 전체 글 조회
      */
-    @GetMapping("/posts")
+    @GetMapping
     public ResponseEntity<Slice<PostResponseDto>> getAllPosts(
             @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
         Slice<PostResponseDto> posts = postService.getAllPostList(pageable);
