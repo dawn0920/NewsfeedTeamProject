@@ -1,5 +1,6 @@
 package org.example.newsfeedteamproject.user.dto.userRegistration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,7 @@ public class SignUpDto {
     @NotBlank(message = "전화번호를 입력해주세요")
     private final String phone;
 
+    @JsonIgnore
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
