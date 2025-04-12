@@ -23,7 +23,7 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private int commentLike;
+    private int commentLike =0;
 
     @Column(nullable = false)
     private String contents;
