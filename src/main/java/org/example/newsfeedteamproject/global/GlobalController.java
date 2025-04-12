@@ -44,15 +44,6 @@ public class GlobalController {
     }
 
     /**
-     * 전체 글 조회
-     */
-    @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> posts = postService.getAllPostList();
-        return ResponseEntity.ok(posts);
-    }
-
-    /**
      * 전체 댓글 조회
      * @return
      */

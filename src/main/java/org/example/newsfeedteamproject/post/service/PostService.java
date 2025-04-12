@@ -58,5 +58,5 @@ public interface PostService {
 
     Slice<PostResponseDto> getPostByUserId(Long userId, Pageable pageable);
 
-    List<PostResponseDto> getAllPostList();
+    Slice<PostResponseDto> getAllPostList(Pageable pageable);
 }

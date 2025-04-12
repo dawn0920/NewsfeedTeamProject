@@ -132,9 +132,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getAllPostList() {
-        List<Post> foundPostList = postRepository.findAll();
-        return foundPostList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    public Slice<PostResponseDto> getAllPostList(Pageable pageable) {
+        Slice<Post> foundPostList = postRepository.findAll(pageable);
+        return foundPostList.map(PostResponseDto::new);
     }
 }
 
