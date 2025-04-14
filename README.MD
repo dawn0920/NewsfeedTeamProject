@@ -25,8 +25,7 @@
 | 게시글 삭제  | DELETE | /posts/{postId}                 |                                                                                                                                      |                                                                                                                                                                                                                                                                                   |    204 No Content|
 
 # 게시글 좋아요 api 명세서
-| 기능           | Method | URL                                     | Request                | Response  | 응답 코드  |
-|--------------|--------|-----------------------------------------|------------------------|-----------|--------|
-| 게시글 좋아요 토글   | POST   |  posts/{postId}/like |  Authorization: Bearer {{access_token}}      | { "success": true, "postLikeCount": 1 }            | 200 OK |
-| 게시물 좋아요 수 조회 | GET    |   Authorization: Bearer {{access_token}}   | |  { "countPostLike": 1 }          | 200 OK |
-|              |        |                                         |                        |           |        |
+| 기능             | Method | URL                                     | Request                                | Response                                | 응답 코드     |
+|----------------|--------|-----------------------------------------|----------------------------------------|-----------------------------------------|-----------|
+| 게시글 좋아요 토글     | POST   | posts/{postId}/like                     | Authorization: Bearer {{access_token}} | { "success": true, "postLikeCount": 1 } | 200 OK    |
+| 게시물 좋아요 수 조회   | GET    | Authorization: Bearer {{access_token}}  |                                        | { "countPostLike": 1 }                  | 200 OK    |
