@@ -13,7 +13,23 @@
 | 팔로잉 리스트 조회     | GET    | /{userId}/following | PathVariable: `userId: Long`                                                                                                                                                                                                      | [ { "userId": 2, "name": "홍길동", "profileImg": "..." } ]                                                                                                                                                                                                                                                                                                     | 200 OK    |
 | 팔로워 리스트 조회     | GET    | /{userId}/follower | PathVariable: `userId: Long`                                                                                                                                                                                                      | [ { "userId": 3, "name": "김영희", "profileImg": "..." } ]                                                                                                                                                                                                                                                                                                     | 200 OK    |
 
----
+
+
+
+# 게시글 api 명세서
+| 기능      | Method | URL             | Request                                                                                                                              | Response                                                                                                                                                                                                                                                                          | 응답 코드  |
+|---------|--------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| 게시글 만들기 | POST   | /posts          | body: { "contents": "test post5", "tag": "#test #newsfeed #team21", "img":"이미지 경로", "mention": "@testuser5" }                        | { "id": 5, "contents": "test post5", "img": "base64EncodedImageString", "tag": "#test #newsfeed #team21", "mention": "@testuser5", "postLike": 0, "commentNum": 0, "userId": 1, "createdAt": "2025-04-13T15:49:14.0126732", "updatedAt": "2025-04-13T15:49:14.0126732" }          | 200 OK |
+| 게시글 조회  | GET    | /posts/{postId} |                                                                                                                                      | { "id": 5, "contents": "test post5", "img": "base64EncodedImageString", "tag": "#test #newsfeed #team21", "mention": "@testuser5", "postLike": 0, "commentNum": 0, "userId": 1, "createdAt": "2025-04-13T15:49:14.012673", "updatedAt": "2025-04-13T15:49:14.012673" }            | 200 OK |
+| 게시글 수정  | PUT    |   /posts/{postId}              | { "contents": "update post test1", "tag": "#updateed #team21", "img": "updatedBase64EncodedImageString", "mention": "@updateduser" } | { "id": 5, "contents": "update post test1", "img": "updatedBase64EncodedImageString", "tag": "#updateed #team21", "mention": "@updateduser", "postLike": 0, "commentNum": 0, "userId": 1, "createdAt": "2025-04-13T15:49:14.012673", "updatedAt": "2025-04-13T15:49:14.012673" }  | 200 OK |
+| 게시글 삭제  | DELETE | /posts/{postId}                 |                                                                                                                                      |                                                                                                                                                                                                                                                                                   |    204 No Content|
+
+# 게시글 좋아요 api 명세서
+| 기능             | Method | URL                                     | Request                                | Response                                | 응답 코드     |
+|----------------|--------|-----------------------------------------|----------------------------------------|-----------------------------------------|-----------|
+| 게시글 좋아요 토글     | POST   | posts/{postId}/like                     | Authorization: Bearer {{access_token}} | { "success": true, "postLikeCount": 1 } | 200 OK    |
+| 게시물 좋아요 수 조회   | GET    | Authorization: Bearer {{access_token}}  |                                        | { "countPostLike": 1 }                  | 200 OK    |
+
 
 #  댓글 API 명세서
 
