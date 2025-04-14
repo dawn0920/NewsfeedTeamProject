@@ -2,9 +2,11 @@ package org.example.newsfeedteamproject.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.newsfeedteamproject.global.common.jwt.JwtAuthenticationFilter;
 import org.example.newsfeedteamproject.global.common.jwt.JwtToken;
 import org.example.newsfeedteamproject.global.common.jwt.JwtTokenProvider;
 import org.example.newsfeedteamproject.global.error.CustomException;
+import org.example.newsfeedteamproject.global.error.ErrorCode;
 import org.example.newsfeedteamproject.global.error.ExceptionCode;
 import org.example.newsfeedteamproject.user.dto.isWithDrawDto.IsWithdrawnRequestDto;
 import org.example.newsfeedteamproject.user.dto.isWithDrawDto.IsWithdrawnResponseDto;
@@ -19,9 +21,11 @@ import org.example.newsfeedteamproject.user.repository.FollowRepository;
 import org.example.newsfeedteamproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -212,12 +216,16 @@ public class UserService {
     @Cacheable(cacheNames = CacheNames.LOGINUSER, key = "'login'+ #p0.getEmail()", unless = "#result== null")
     @jakarta.transaction.Transactional
     public JwtToken login(LoginRequestDto requestDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-        Long refreshTokenTTL = jwtTokenProvider.getExpiration(jwtToken.getRefreshToken());
-        redisDao.setRefreshToken(requestDto.getEmail(), jwtToken.getRefreshToken(), refreshTokenTTL);
-        return jwtToken;
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+            Long refreshTokenTTL = jwtTokenProvider.getExpiration(jwtToken.getRefreshToken());
+            redisDao.setRefreshToken(requestDto.getEmail(), jwtToken.getRefreshToken(), refreshTokenTTL);
+            return jwtToken;
+        } catch (UsernameNotFoundException e) {
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
+        }
     }
 
     /**
@@ -228,10 +236,10 @@ public class UserService {
 
     @CacheEvict(cacheNames = CacheNames.LOGINUSER, key = "'login'+#p1")
     @Transactional
-    public void logOut(String accessToken, String email) {
-
-        Long expiration = jwtTokenProvider.getExpiration(accessToken);
-        redisDao.setBlackList(accessToken, "logout", expiration);
+    public void logOut(String bearerToken) {
+        Long expiration = jwtTokenProvider.getExpiration(bearerToken);
+        String email = jwtTokenProvider.getEmail(bearerToken);
+        redisDao.setBlackList(bearerToken, "logout", expiration);
 
         if (redisDao.hasKey(email)) {
             redisDao.deleteRefreshToken(email);

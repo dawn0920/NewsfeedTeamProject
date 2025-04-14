@@ -3,6 +3,7 @@ package org.example.newsfeedteamproject.global.common.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 
 @Slf4j
@@ -140,5 +142,19 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
         Date expiration = claims.getExpiration();
         return expiration.getTime() - System.currentTimeMillis();
+    }
+
+    public String getEmail(String accessToken) {
+        Claims claims = parseClaims(accessToken);
+        String email = claims.getSubject();
+        return email;
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7).trim();
+        }
+        return null;
     }
 }

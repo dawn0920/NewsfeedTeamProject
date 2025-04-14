@@ -1,21 +1,16 @@
 package org.example.newsfeedteamproject.user.controller;
 
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedteamproject.global.common.jwt.JwtToken;
-import org.example.newsfeedteamproject.user.dto.userRegistration.LogOutDto;
+import org.example.newsfeedteamproject.global.common.jwt.JwtTokenProvider;
 import org.example.newsfeedteamproject.user.dto.userRegistration.LoginRequestDto;
 import org.example.newsfeedteamproject.user.dto.userRegistration.ResponseSignUpDto;
 import org.example.newsfeedteamproject.user.dto.userRegistration.SignUpDto;
 import org.example.newsfeedteamproject.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -23,6 +18,7 @@ import java.io.IOException;
 public class LoginController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 회원가입 API
@@ -54,8 +50,9 @@ public class LoginController {
      */
 
     @PostMapping("/logout")
-    public ResponseEntity<String>  logout(@RequestBody @Validated LogOutDto logOutDto){
-        userService.logOut(logOutDto.getAccessToken(), logOutDto.getEmail());
+    public ResponseEntity<String>  logout(HttpServletRequest request){
+        String bearerToken = jwtTokenProvider.resolveToken(request);
+        userService.logOut(bearerToken);
         return ResponseEntity.ok("로그아웃 완료");
     }
 }
