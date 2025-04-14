@@ -91,7 +91,7 @@ public class UserController {
     @GetMapping("/{userId}/posts")
     public ResponseEntity<Slice<PostResponseDto>> getPostById(
             @AuthenticationPrincipal(expression = "username") String email,
-            @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         return new ResponseEntity<>(postService.getPostByUserId(userId, pageable), HttpStatus.OK);
@@ -107,7 +107,7 @@ public class UserController {
     @GetMapping("/{userId}/comments")
     public ResponseEntity<Slice<CommentResponseDto>> getCommentPage
     (@AuthenticationPrincipal(expression = "username") String email,
-     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+     @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long userId = user.getId();
         return new ResponseEntity<>(commentService.getCommentsByUserId(userId, pageable), HttpStatus.OK);

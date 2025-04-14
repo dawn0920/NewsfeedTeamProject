@@ -137,7 +137,7 @@ public class PostController {
     @GetMapping("/{postId}/comments")
     public ResponseEntity<Slice<CommentResponseDto>> getCommentPageByPost
     (@PathVariable Long postId,
-     @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+     @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
         return new ResponseEntity<>(commentService.getCommentsByPost(postId, pageable), HttpStatus.OK);
     }
 
@@ -146,7 +146,7 @@ public class PostController {
      */
     @GetMapping
     public ResponseEntity<Slice<PostResponseDto>> getAllPosts(
-            @PageableDefault(size = 10, direction = DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
         Slice<PostResponseDto> posts = postService.getAllPostList(pageable);
         return ResponseEntity.ok(posts);
     }
