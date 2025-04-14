@@ -19,6 +19,7 @@
 <img width="450" alt="Group 15" src="https://github.com/user-attachments/assets/963dd6a0-28f5-4a9f-9d50-8d877615cbef" />
 
 ## 🗃️ ERD 다이어그램
+![Image](https://github.com/user-attachments/assets/6a61a2a0-cd09-45aa-acc4-7bb3d3ea2688)
 
 ## 📘 API 명세서
 
