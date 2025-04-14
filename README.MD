@@ -33,10 +33,10 @@
 
 #  댓글 API 명세서
 
-| 기능 | Method | URL | Request 예시 | Response 예시 | 응답코드 |
-|------|--------|-----|--------------|---------------|----------|
-| 게시글에 댓글 추가 | POST | http://localhost:8080/posts/{{postId}}/comments | `{ "contents": "hi Add test comment1 ^^" }` | `{ "id": 5, "userId": 1, "postId": 1, "contents": "hi Add comment5", "creatTime": "2025-04-13T15:55:10.2615046", "modifiedTime": "2025-04-13T15:55:10.2615046", "commentLikes": [], "likeCount": 0 }` | 201 Created |
-| 게시글의 댓글들을 가져오기 | GET | http://localhost:8080/posts/{{postId}}/comments?page=0&size=10&sort=creatTime,desc | - | `{ "content": [ { "id": 5, "userId": 1, "postId": 1, "contents": "hi Add comment5", "creatTime": "2025-04-13T15:55:10.261505", "modifiedTime": "2025-04-13T15:55:10.261505", "commentLikes": [], "likeCount": 0 } ], "pageable": { "pageNumber": 0, "pageSize": 10, "sort": { "empty": false, "unsorted": false, "sorted": true }, "offset": 0, "unpaged": false, "paged": true }, "first": true, "last": true, "size": 10, "number": 0, "sort": { "empty": false, "unsorted": false, "sorted": true }, "numberOfElements": 5, "empty": false }` | 200 OK |
+| 기능 | Method | URL                                                        | Request 예시 | Response 예시 | 응답코드 |
+|------|--------|------------------------------------------------------------|--------------|---------------|----------|
+| 게시글에 댓글 추가 | POST | /posts/{postId}/comments                                   | `{ "contents": "hi Add test comment1 ^^" }` | `{ "id": 5, "userId": 1, "postId": 1, "contents": "hi Add comment5", "creatTime": "2025-04-13T15:55:10.2615046", "modifiedTime": "2025-04-13T15:55:10.2615046", "commentLikes": [], "likeCount": 0 }` | 201 Created |
+| 게시글의 댓글들을 가져오기 | GET |/posts/{postId}/comments | - | `{ "content": [ { "id": 5, "userId": 1, "postId": 1, "contents": "hi Add comment5", "creatTime": "2025-04-13T15:55:10.261505", "modifiedTime": "2025-04-13T15:55:10.261505", "commentLikes": [], "likeCount": 0 } ], "pageable": { "pageNumber": 0, "pageSize": 10, "sort": { "empty": false, "unsorted": false, "sorted": true }, "offset": 0, "unpaged": false, "paged": true }, "first": true, "last": true, "size": 10, "number": 0, "sort": { "empty": false, "unsorted": false, "sorted": true }, "numberOfElements": 5, "empty": false }` | 200 OK |
 
 ---
 
@@ -44,5 +44,5 @@
 
 | 기능 | Method | URL | Request 예시 | Response 예시 | 응답코드 |
 |------|--------|-----|--------------|---------------|----------|
-| 댓글 좋아요 토글 | POST | http://localhost:8080/comments/{{commentId}}/like | - | `{ "success": true, "commentLikeCount": 1 }` | 200 OK |
-| 댓글 좋아요 수 가져오기 | GET | http://localhost:8080/comments/{{commentId}}/like | - | `{ "countCommentLike": 1 }` | 200 OK |
+| 댓글 좋아요 토글 | POST | comments/{commentId}/like | - | `{ "success": true, "commentLikeCount": 1 }` | 200 OK |
+| 댓글 좋아요 수 가져오기 | GET | comments/{commentId}/like | - | `{ "countCommentLike": 1 }` | 200 OK |
